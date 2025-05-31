@@ -315,10 +315,66 @@ impl Html for &str {
     }
 }
 
+impl Html for String {
+    #[inline]
+    fn write(self, s: &mut String) {
+        self.as_str().write(s);
+    }
+}
+
+impl Html for Box<str> {
+    #[inline]
+    fn write(self, s: &mut String) {
+        self.as_ref().write(s);
+    }
+}
+
+impl Html for std::rc::Rc<str> {
+    #[inline]
+    fn write(self, s: &mut String) {
+        self.as_ref().write(s);
+    }
+}
+
+impl Html for std::sync::Arc<str> {
+    #[inline]
+    fn write(self, s: &mut String) {
+        self.as_ref().write(s);
+    }
+}
+
 impl Html for Raw<&str> {
     #[inline]
     fn write(self, s: &mut String) {
         s.push_str(self.0);
+    }
+}
+
+impl Html for Raw<String> {
+    #[inline]
+    fn write(self, s: &mut String) {
+        Raw(self.0.as_str()).write(s);
+    }
+}
+
+impl Html for Raw<Box<str>> {
+    #[inline]
+    fn write(self, s: &mut String) {
+        Raw(self.0.as_ref()).write(s);
+    }
+}
+
+impl Html for Raw<std::rc::Rc<str>> {
+    #[inline]
+    fn write(self, s: &mut String) {
+        Raw(self.0.as_ref()).write(s);
+    }
+}
+
+impl Html for Raw<std::sync::Arc<str>> {
+    #[inline]
+    fn write(self, s: &mut String) {
+        Raw(self.0.as_ref()).write(s);
     }
 }
 
@@ -415,6 +471,34 @@ impl Html for Attr<&str, &str> {
     }
 }
 
+impl Html for Attr<&str, String> {
+    #[inline]
+    fn write(self, s: &mut String) {
+        Attr(self.0, self.1.as_str()).write(s);
+    }
+}
+
+impl Html for Attr<&str, Box<str>> {
+    #[inline]
+    fn write(self, s: &mut String) {
+        Attr(self.0, self.1.as_ref()).write(s);
+    }
+}
+
+impl Html for Attr<&str, std::rc::Rc<str>> {
+    #[inline]
+    fn write(self, s: &mut String) {
+        Attr(self.0, self.1.as_ref()).write(s);
+    }
+}
+
+impl Html for Attr<&str, std::sync::Arc<str>> {
+    #[inline]
+    fn write(self, s: &mut String) {
+        Attr(self.0, self.1.as_ref()).write(s);
+    }
+}
+
 impl Html for Attr<&str, Raw<&str>> {
     #[inline]
     fn write(self, s: &mut String) {
@@ -422,6 +506,34 @@ impl Html for Attr<&str, Raw<&str>> {
         s.push_str("=\"");
         self.1.write(s);
         s.push_str("\"");
+    }
+}
+
+impl Html for Attr<&str, Raw<String>> {
+    #[inline]
+    fn write(self, s: &mut String) {
+        Attr(self.0, Raw(self.1.0.as_str())).write(s);
+    }
+}
+
+impl Html for Attr<&str, Raw<Box<str>>> {
+    #[inline]
+    fn write(self, s: &mut String) {
+        Attr(self.0, Raw(self.1.0.as_ref())).write(s);
+    }
+}
+
+impl Html for Attr<&str, Raw<std::rc::Rc<str>>> {
+    #[inline]
+    fn write(self, s: &mut String) {
+        Attr(self.0, Raw(self.1.0.as_ref())).write(s);
+    }
+}
+
+impl Html for Attr<&str, Raw<std::sync::Arc<str>>> {
+    #[inline]
+    fn write(self, s: &mut String) {
+        Attr(self.0, Raw(self.1.0.as_ref())).write(s);
     }
 }
 
