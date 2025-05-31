@@ -11,4 +11,11 @@ documentation = "https://docs.rs/avosetta"
 keywords = [ "web", "proc-macro", "html", "template", "encode" ]
 categories = [ "web-programming", "template-engine", "encoding" ]
 
+[lib]
+proc-macro = true
+
 [dependencies]
+proc-macro-crate = "3.3.0"
+proc-macro2 = "1.0.95"
+quote = "1.0.40"
+syn = { version = "2.0.101", features = ["full"] }
