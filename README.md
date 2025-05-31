@@ -1,4 +1,5 @@
 <div align="center">
+
 # avosetta
 
 A fast, minimal html templating language for Rust.
@@ -8,6 +9,7 @@ A fast, minimal html templating language for Rust.
 ![docs.rs](https://img.shields.io/docsrs/avosetta?style=for-the-badge)
 ![Crates.io Total Downloads](https://img.shields.io/crates/d/avosetta?style=for-the-badge)
 ![GitHub License](https://img.shields.io/github/license/callum-hopkins-dev/avosetta?style=for-the-badge)
+
 </div>
 
 ## about
