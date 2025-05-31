@@ -5,7 +5,7 @@ A fast, minimal html templating language for Rust.
 ## about
 
 `avosetta` is a minimal templating library for that utilises procedural
-macros to generate as close to optimal code as possible for rendering `HTML`
+macros to generate as close to optimal code as possible for rendering html
 content at runtime. It has no `unsafe` code, only a handful of dependencies, and
 does allocate any values on the heap.
 
@@ -31,7 +31,7 @@ To start using `avosetta`, you'll first need to add our package to your
 avosetta = "0.1.0"
 ```
 
-Then you can start writing `HTML` templates directly in your `Rust` source
+Then you can start writing html templates directly in your `Rust` source
 code. We recommend that you import the `prelude` module to reduce unnecessary
 qualifications, but that's up to you.
 
