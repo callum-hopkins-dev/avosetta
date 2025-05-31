@@ -149,9 +149,18 @@ impl Generate for InterpValue {
                 interp_if.generate(stream);
             }
 
-            InterpValue::Expr(expr) => {
-                stream.push_write(quote! { #expr });
-            }
+            InterpValue::Expr(expr) => match &expr {
+                syn::Expr::Lit(ExprLit {
+                    lit: Lit::Str(lit_str),
+                    ..
+                }) => {
+                    stream.push_escaped(&lit_str.value());
+                }
+
+                expr => {
+                    stream.push_write(quote! { #expr });
+                }
+            },
 
             InterpValue::For(interp_for) => {
                 interp_for.generate(stream);
@@ -333,7 +342,7 @@ impl Generate for Attr {
                     self.name.generate(stream);
                     stream.push_char('=');
                     stream.push_char('\"');
-                    lit_str.generate(stream);
+                    stream.push_escaped(&lit_str.value());
                     stream.push_char('\"');
                 }
 
