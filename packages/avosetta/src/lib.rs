@@ -5,7 +5,7 @@
 //! ## about
 //!
 //! `avosetta` is a minimal templating library for that utilises procedural
-//! macros to generate as close to optimal code as possible for rendering `HTML`
+//! macros to generate as close to optimal code as possible for rendering html
 //! content at runtime. It has no `unsafe` code, only a handful of dependencies, and
 //! does allocate any values on the heap.
 //!
@@ -31,7 +31,7 @@
 //! avosetta = "0.1.0"
 //! ```
 //!
-//! Then you can start writing `HTML` templates directly in your `Rust` source
+//! Then you can start writing html templates directly in your `Rust` source
 //! code. We recommend that you import the `prelude` module to reduce unnecessary
 //! qualifications, but that's up to you.
 //!
@@ -142,7 +142,7 @@
 //!
 //! ### interpolation
 //!
-//! The process of "injecting" or writing dynamic content into the `HTML` is
+//! The process of "injecting" or writing dynamic content into the html is
 //! called `interpolation`. This might be used for displaying a local variable
 //! containing a username, or for performing a conditional `if` check before
 //! rendering some sub-content.
@@ -166,7 +166,7 @@
 //!   @{ x + 2 }
 //!
 //!   // `Html` is implemented for `()`, therefore, expressions don't need to
-//!   // return any `HTML` content:
+//!   // return any html content:
 //!   @{
 //!     // This will be executed when the [`Html`] is written to a [`String`].
 //!     println!("Hello, World!");
@@ -202,7 +202,7 @@
 //!
 //! ### string literals
 //!
-//! Whilst most content can be interpolated into the `HTML` at runtime, there
+//! Whilst most content can be interpolated into the html at runtime, there
 //! is a specific optimisation made for static string literals. When used without an
 //! `@`, the string literals are automatically escaped at compile-time and rendered
 //! using `avosetta::raw`.
@@ -210,7 +210,7 @@
 //! ```rust
 //! # use avosetta::prelude::*;
 //! html! {
-//!   // Both of these elements will render to the same `HTML`, however,
+//!   // Both of these elements will render to the same html, however,
 //!   // the first one will escape the string at runtime because it is an
 //!   // interpolated expression.
 //!   h1 { @"Hello, World!" }
@@ -227,7 +227,7 @@ pub mod prelude {
     pub use crate::{Html, html};
 }
 
-/// Represents a fragment of valid `HTML` that can be written to a `String`.
+/// Represents a fragment of valid html that can be written to a `String`.
 ///
 /// This trait is the backbone of `avosetta` and is implemented for most
 /// primitives, such as integers, floats and strings. In some sense, this is a
@@ -238,7 +238,7 @@ pub trait Html {
 }
 
 /// Text that should not be escaped at runtime, such as dynamically generated
-/// `HTML`, or some content that has already been escaped.
+/// html, or some content that has already been escaped.
 ///
 /// Note, that string literals are automatically escaped at compile-time when
 /// used within [`html!`], therefore, one should not wrap static content with `Raw` in
@@ -254,7 +254,7 @@ pub trait Html {
 pub struct Raw<T>(pub T);
 
 /// Text that should not be escaped at runtime, such as dynamically generated
-/// `HTML`, or some content that has already been escaped.
+/// html, or some content that has already been escaped.
 ///
 /// Note, that string literals are automatically escaped at compile-time when
 /// used within [`html!`], therefore, one should not wrap static content with `Raw` in
@@ -387,7 +387,7 @@ macro_rules! __impl_html_float {
 __impl_html_float!(f32);
 __impl_html_float!(f64);
 
-/// A `HTML` attribute, containing both a key and value.
+/// A html attribute, containing both a key and value.
 ///
 /// For most value types, this struct simply renders out `K=\"V\"`, where
 /// `K` is written as a [`&str`] directly, without any escaping and `V` is converted
@@ -395,12 +395,12 @@ __impl_html_float!(f64);
 /// handled differently:
 ///
 /// - [`bool`]: If the value is [`false`], then the entire attribute is ommitted from the
-/// output `HTML`. If the value is [`true`], then just the `K` is written out.
+/// output html. If the value is [`true`], then just the `K` is written out.
 ///
 /// - [`Option<T>`]: This struct will omit the attribute, if the provided [`Option<T>`] is [`None`],
 /// and will use the [`Attr<&str, T>`] implementation if the provided value is [`Some`].
 ///
-/// Note: This struct only implements [`Html`] for [`&str`] keys, since `HTML`
+/// Note: This struct only implements [`Html`] for [`&str`] keys, since html
 /// attributes have very stringent requirements on what constitutes a valid name.
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Attr<K, V>(pub K, pub V);
