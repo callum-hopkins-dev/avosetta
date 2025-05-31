@@ -4,11 +4,11 @@
 
 A fast, minimal html templating language for Rust.
 
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/callum-hopkins-dev/avosetta/build.yaml?branch=main&event=push&style=for-the-badge)
-![Crates.io Version](https://img.shields.io/crates/v/avosetta?style=for-the-badge)
-![docs.rs](https://img.shields.io/docsrs/avosetta?style=for-the-badge)
-![Crates.io Total Downloads](https://img.shields.io/crates/d/avosetta?style=for-the-badge)
-![GitHub License](https://img.shields.io/github/license/callum-hopkins-dev/avosetta?style=for-the-badge)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/callum-hopkins-dev/avosetta/build.yaml?branch=main&event=push&style=for-the-badge)](https://github.com/callum-hopkins-dev/avosetta/actions/workflows/build.yaml)
+[![Crates.io Version](https://img.shields.io/crates/v/avosetta?style=for-the-badge)](https://crates.io/crates/avosetta)
+[![docs.rs](https://img.shields.io/docsrs/avosetta?style=for-the-badge)](https://docs.rs/avosetta/0.1.0/avosetta)
+[![Crates.io Total Downloads](https://img.shields.io/crates/d/avosetta?style=for-the-badge)](https://crates.io/crates/avosetta)
+[![GitHub License](https://img.shields.io/github/license/callum-hopkins-dev/avosetta?style=for-the-badge)](https://github.com/callum-hopkins-dev/avosetta/blob/main/LICENSE)
 
 </div>
 
