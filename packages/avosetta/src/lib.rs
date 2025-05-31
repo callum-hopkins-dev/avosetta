@@ -202,22 +202,22 @@
 //!
 //! ### string literals
 //!
-//! Whilst most content can be interpolated into the html at runtime, there
-//! is a specific optimisation made for static string literals. When used without an
-//! `@`, the string literals are automatically escaped at compile-time and rendered
-//! using `avosetta::raw`.
+//! Static string literals can be written directly without the need for an
+//! interpolation. This form of "non-interpolated" static string is always escaped
+//! at compile time, whereas, the interpolated variant will only be escaped at
+//! compile time if the expression is simple enough for `avosetta` to parse.
 //!
 //! ```rust
 //! # use avosetta::prelude::*;
 //! html! {
-//!   // Both of these elements will render to the same html, however,
-//!   // the first one will escape the string at runtime because it is an
-//!   // interpolated expression.
+//!   // All of these statements will result in the same output.
 //!   h1 { @"Hello, World!" }
 //!
-//!   // This one will be pre-escaped at compile time, avoiding the performance
-//!   // cost of runtime escaping.
 //!   h1 { "Hello, World!" }
+//!
+//!   // This will not be escaped at compile-time because the extra braces make
+//!   // this expression too complex for `avosetta` to try and parse.
+//!   h1 { @{ "Hello, World!" } }
 //! };
 //! ```
 
