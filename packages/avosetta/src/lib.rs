@@ -13,8 +13,7 @@
 //! straightforward to parse, has little ambiguity and integrates into `Rust`
 //! code better. And unlike other templating libraries such as `maud`, our syntax
 //! typically only has a single way of writing various constructs, reducing
-//! code-style clashing. For more information, read the full syntax reference
-//! [here](#reference).
+//! code-style clashing.
 //!
 //! Optimisations include automatically escaping static string literals at
 //! compile-time and collapsing contiguous [`String::push_str`] calls into a single one.
