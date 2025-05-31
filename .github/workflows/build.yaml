@@ -1,4 +1,4 @@
-name: pull_request_check
+name: build
 
 on:
   pull_request:
@@ -8,7 +8,7 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  pull_request_check:
+  build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
