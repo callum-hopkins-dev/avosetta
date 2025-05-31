@@ -1,0 +1,3 @@
+[workspace]
+members = ["packages/avosetta", "packages/avosetta-macros"]
+resolver = "3"

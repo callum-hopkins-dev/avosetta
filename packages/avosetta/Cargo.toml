@@ -1,0 +1,17 @@
+[package]
+name = "avosetta"
+description = "A fast, minimal html templating language for Rust."
+version = "0.1.0"
+authors = [ "Callum Hopkins" ]
+edition = "2024"
+license = "MIT"
+repository = "https://github.com/callum-hopkins-dev/avosetta"
+readme = "README.md"
+documentation = "https://docs.rs/avosetta"
+keywords = [ "web", "proc-macro", "html", "template", "encode" ]
+categories = [ "web-programming", "template-engine", "encoding" ]
+
+[dependencies]
+itoa = "1.0.15"
+ryu = "1.0.20"
+avosetta-macros = { version = "0.1.0", path = "../avosetta-macros" }
