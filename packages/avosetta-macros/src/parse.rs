@@ -78,7 +78,7 @@ impl Parse for InterpIf {
 
         Ok(Self {
             _if_token: input.parse()?,
-            cond: input.parse()?,
+            cond: input.call(Expr::parse_without_eager_brace)?,
             _brace: braced!(then_branch in input),
             then_branch: then_branch.parse()?,
             else_if: {
@@ -107,7 +107,7 @@ impl Parse for InterpElseIf {
         Ok(Self {
             _else_token: input.parse()?,
             _if_token: input.parse()?,
-            cond: input.parse()?,
+            cond: input.call(Expr::parse_without_eager_brace)?,
             _brace: braced!(group in input),
             group: group.parse()?,
         })
