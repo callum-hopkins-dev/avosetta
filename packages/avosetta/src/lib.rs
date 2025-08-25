@@ -25,14 +25,12 @@
 //! To start using `avosetta`, you'll first need to add our package to your
 //! `Cargo.toml` manifest:
 //!
-//! ```toml
-//! [dependencies]
-//! avosetta = "0.1.0"
+//! ```sh
+//! cargo add avosetta
 //! ```
 //!
 //! Then you can start writing html templates directly in your `Rust` source
-//! code. We recommend that you import the `prelude` module to reduce unnecessary
-//! qualifications, but that's up to you.
+//! code.
 //!
 //! ```rust
 //! use avosetta::prelude::*;
@@ -220,10 +218,14 @@
 //! };
 //! ```
 
+#[cfg(feature = "macros")]
 pub use ::avosetta_macros::html;
 
 pub mod prelude {
-    pub use crate::{Html, html};
+    pub use crate::Html;
+
+    #[cfg(feature = "macros")]
+    pub use crate::html;
 }
 
 /// Represents a fragment of valid html that can be written to a `String`.
