@@ -14,4 +14,8 @@ categories = [ "web-programming", "template-engine", "encoding" ]
 [dependencies]
 itoa = "1.0.15"
 ryu = "1.0.20"
-avosetta-macros = { version = "0.1.4", path = "../avosetta-macros" }
+avosetta-macros = { version = "0.1.4", path = "../avosetta-macros", optional = true }
+
+[features]
+default = ["macros"]
+macros = ["dep:avosetta-macros"]

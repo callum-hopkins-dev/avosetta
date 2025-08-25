@@ -218,10 +218,14 @@
 //! };
 //! ```
 
+#[cfg(feature = "macros")]
 pub use ::avosetta_macros::html;
 
 pub mod prelude {
-    pub use crate::{Html, html};
+    pub use crate::Html;
+
+    #[cfg(feature = "macros")]
+    pub use crate::html;
 }
 
 /// Represents a fragment of valid html that can be written to a `String`.
