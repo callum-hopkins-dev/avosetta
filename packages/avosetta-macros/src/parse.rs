@@ -136,7 +136,7 @@ impl Parse for InterpFor {
             _for_token: input.parse()?,
             pat: input.call(Pat::parse_multi_with_leading_vert)?,
             _in_token: input.parse()?,
-            expr: input.parse()?,
+            expr: input.call(Expr::parse_without_eager_brace)?,
             _brace: braced!(body in input),
             body: body.parse()?,
         })
