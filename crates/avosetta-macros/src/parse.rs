@@ -1,25 +1,44 @@
+use proc_macro2::Span;
 use syn::{
-    Expr, Ident, LitStr, Pat, Token, braced, bracketed,
+    Expr, Ident, Item, LitStr, Pat, Stmt, Token, braced, bracketed,
     parse::Parse,
+    punctuated::Punctuated,
     token::{Brace, Bracket},
 };
 
-use crate::ast::{
-    Attr, AttrValue, Attrs, Element, Group, Interp, InterpArm, InterpArmExpr, InterpArmGroup,
-    InterpElse, InterpElseIf, InterpFor, InterpIf, InterpMatch, InterpValue, Name, Node, Normal,
-    Void,
-};
+use crate::ast::*;
 
-impl Parse for Group {
+impl Parse for Input {
     #[inline]
     fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
-        let mut v = Vec::new();
+        Ok(Self {
+            crate_ident: input.parse()?,
+            _comma: input.parse()?,
+            tokens: input.parse()?,
+        })
+    }
+}
+
+impl Parse for CrateIdent {
+    #[inline]
+    fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
+        if input.peek(Token![crate]) {
+            Ok(Self::Crate(input.parse()?))
+        } else {
+            Ok(Self::Ident(input.parse()?))
+        }
+    }
+}
+
+impl Parse for Group {
+    fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
+        let mut nodes = Vec::new();
 
         while !input.is_empty() {
-            v.push(input.parse()?);
+            nodes.push(input.parse()?);
         }
 
-        Ok(Self(v.into_boxed_slice()))
+        Ok(Self(nodes.into_boxed_slice()))
     }
 }
 
@@ -29,6 +48,10 @@ impl Parse for Node {
         let lookahead = input.lookahead1();
 
         if lookahead.peek(LitStr) || lookahead.peek(Ident) {
+            if let Ok(ident) = input.fork().parse() {
+                crate::completion::push_element(ident);
+            }
+
             if input.peek2(Brace)
                 || (input.peek2(Bracket) && input.peek3(Brace))
                 || input.peek2(Token![;])
@@ -65,8 +88,14 @@ impl Parse for InterpValue {
             Ok(Self::Match(input.parse()?))
         } else if input.peek(Token![for]) {
             Ok(Self::For(input.parse()?))
+        } else if input.peek(Token![let]) {
+            Ok(Self::Stmt(input.parse()?))
         } else {
-            Ok(Self::Expr(input.parse()?))
+            if input.fork().parse::<Item>().is_ok() {
+                Ok(Self::Stmt(Stmt::Item(input.parse()?)))
+            } else {
+                Ok(Self::Expr(input.parse()?))
+            }
         }
     }
 }
@@ -222,17 +251,12 @@ impl Parse for Normal {
 
         Ok(Self {
             name: input.parse()?,
-            attrs: if input.peek(Bracket) {
-                Some(input.parse()?)
-            } else {
-                None
-            },
+
+            attrs: input.parse()?,
+
             _brace: braced!(inner in input),
-            inner: if inner.is_empty() {
-                None
-            } else {
-                Some(inner.parse()?)
-            },
+
+            inner: inner.parse::<Group>()?,
         })
     }
 }
@@ -242,11 +266,7 @@ impl Parse for Void {
     fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
         Ok(Self {
             name: input.parse()?,
-            attrs: if input.peek(Bracket) {
-                Some(input.parse()?)
-            } else {
-                None
-            },
+            attrs: input.parse()?,
             _semi_token: input.parse()?,
         })
     }
@@ -255,18 +275,29 @@ impl Parse for Void {
 impl Parse for Attrs {
     #[inline]
     fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
-        let inner;
+        if input.peek(Bracket) {
+            let inner;
 
-        Ok(Self {
-            _bracket: bracketed!(inner in input),
-            inner: inner.parse_terminated(Attr::parse, Token![,])?,
-        })
+            Ok(Self {
+                _bracket: bracketed!(inner in input),
+                inner: inner.parse_terminated(Attr::parse, Token![,])?,
+            })
+        } else {
+            Ok(Self {
+                _bracket: Bracket(Span::call_site()),
+                inner: Punctuated::new(),
+            })
+        }
     }
 }
 
 impl Parse for Attr {
     #[inline]
     fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
+        if let Ok(ident) = input.fork().parse() {
+            crate::completion::push_attr(ident);
+        }
+
         Ok(Self {
             name: input.parse()?,
             value: if input.peek(Token![=]) {
@@ -287,6 +318,18 @@ impl Parse for Name {
             Ok(Self::Lit(input.parse()?))
         } else if lookahead.peek(Ident) {
             Ok(Self::Ident(input.parse()?))
+        } else if lookahead.peek(Token![as]) {
+            let _as: Token![as] = input.parse()?;
+            Ok(Self::Lit(LitStr::new("as", _as.span)))
+        } else if lookahead.peek(Token![type]) {
+            let _type: Token![type] = input.parse()?;
+            Ok(Self::Lit(LitStr::new("type", _type.span)))
+        } else if lookahead.peek(Token![for]) {
+            let _for: Token![for] = input.parse()?;
+            Ok(Self::Lit(LitStr::new("for", _for.span)))
+        } else if lookahead.peek(Token![loop]) {
+            let _loop: Token![loop] = input.parse()?;
+            Ok(Self::Lit(LitStr::new("loop", _loop.span)))
         } else {
             Err(lookahead.error())
         }
