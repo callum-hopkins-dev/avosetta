@@ -13,6 +13,8 @@ mod parse;
 
 #[proc_macro]
 pub fn asx(item: proc_macro::TokenStream) -> proc_macro::TokenStream {
+    crate::completion::clear();
+
     let input = syn::parse_macro_input!(item as Input);
 
     let mut tokens = TokenStream::new();
