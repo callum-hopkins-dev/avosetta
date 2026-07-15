@@ -24,6 +24,11 @@ pub fn push_attr(ident: Ident) {
     push(Completion::Attr(ident))
 }
 
+#[inline]
+pub fn clear() {
+    COMPLETIONS.with_borrow_mut(|x| x.clear());
+}
+
 pub fn to_token_stream(crate_ident: &CrateIdent) -> TokenStream {
     COMPLETIONS.with_borrow(|completions| {
         let mut tokens = TokenStream::new();
