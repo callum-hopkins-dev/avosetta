@@ -2,7 +2,7 @@
 
 # avosetta
 
-A fast, minimal html templating language for Rust.
+Rust-native HTML templates with compile-time optimization.
 
 [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/callum-hopkins-dev/avosetta/build.yaml?branch=main&event=push&style=for-the-badge)](https://github.com/callum-hopkins-dev/avosetta/actions/workflows/build.yaml)
 [![Crates.io Version](https://img.shields.io/crates/v/avosetta?style=for-the-badge)](https://crates.io/crates/avosetta)
@@ -14,79 +14,141 @@ A fast, minimal html templating language for Rust.
 
 ## about
 
-`avosetta` is a minimal templating library for that utilises procedural
-macros to generate as close to optimal code as possible for rendering html
-content at runtime. It has no `unsafe` code, only a handful of dependencies, and
-does not allocate any values on the heap.
+`avosetta` is a Rust-native HTML templating library built around the `asx!`
+proc macro. Templates use a compact, Rust-like syntax and expand to values
+implementing `Html`, which render directly into a `String`.
 
-We implement a terse, simple syntax for specifying templates that is
-straightforward to parse, has little ambiguity and integrates into `Rust`
-code better. And unlike other templating libraries such as `maud`, our syntax
-typically only has a single way of writing various constructs, reducing
-code-style clashing. For more information, read the full syntax reference
-[here](https://docs.rs/avosetta/latest/avosetta#reference).
+The generated code is designed to leave very little work for runtime: adjacent
+static output is combined into larger string writes, and static string literals
+are HTML-escaped during compilation. Dynamic values are rendered through the
+`Html` trait and escaped where appropriate.
 
-Optimisations include automatically escaping static string literals at
-compile-time and collapsing contiguous `String::push_str` calls into a single one.
-Therefore, if your html fragment is entirely static, the generated code will
-just be a single `String::push_str` with a `&str`.
+* Rust-like elements, attributes, interpolation, and control flow
+* Compile-time escaping of static string literals
+* Coalesced static output for fewer runtime string operations
+* Runtime escaping for dynamic strings and characters
+* Conditional attributes through `bool` and `Option`
+* Direct composition through the `Html` trait
+* No intermediate template tree or virtual DOM
 
-## getting started
+## installation
 
-To start using `avosetta`, you'll first need to add our package to your
-`Cargo.toml` manifest:
+Add `avosetta` with macro support:
 
-```sh
-cargo add avosetta
+```console
+cargo add avosetta --features macros
 ```
 
-Then you can start writing html templates directly in your `Rust` source
-code.
+## quick start
 
 ```rust
-use avosetta::prelude::*;
+use avosetta::{asx, Html};
 
-fn main() {
-  let mut s = String::new();
-  index().write(&mut s);
-
-  println!("{s}");
-}
-
-fn index() -> impl Html {
-  html! {
-    @layout(
-      html! {
-        title { "avosetta" }
-      },
-
-      html! {
-        h1 { "Hello, World!" }
-      },
-    )
-  }
-}
-
-fn layout(
-  head: impl Html,
-  body: impl Html,
-) -> impl Html {
-  html! {
-    "!DOCTYPE"[html];
-    html[lang="en"] {
-      head {
-        meta[charset="UTF-8"];
-        meta[name="viewport", content="width=device-width,initial-scale=1"];
-
-        @head
-      }
-
-      body {
-        main {
-          @body
-        }
-      }
+let name = "<Ada>";
+let page = asx! {
+    main[class="profile"] {
+        h1 { "Hello, " @name }
+        input[disabled=true];
     }
-  }
+};
+
+let mut html = String::new();
+page.write(&mut html);
+
+assert_eq!(
+    html,
+    r#"<main class="profile"><h1>Hello, &lt;Ada&gt;</h1><input disabled="disabled"></main>"#,
+);
+```
+
+`asx!` returns an opaque value implementing `Html`. Call `Html::write` to append the rendered template to a string buffer.
+
+## syntax at a glance
+
+Elements use braces for children, while void elements end with a semicolon.
+Prefix Rust expressions and control flow with `@`:
+
+```rust
+use avosetta::{asx, Html};
+
+let title = "Messages";
+let messages = ["Hello", "<Welcome>"];
+
+let page = asx! {
+    section[class="messages"] {
+        h1 { @title }
+
+        @if messages.is_empty() {
+            p { "No messages" }
+        } else {
+            ul {
+                @for message in messages {
+                    li { @message }
+                }
+            }
+        }
+    }
+};
+
+let mut html = String::new();
+page.write(&mut html);
+```
+
+Attribute values are Rust expressions. String literals can be written directly
+as template text, and names that are not Rust identifiers can be quoted:
+
+```rust
+"x-user-card"["aria-label"=label] {
+    span { "Profile" }
 }
 ```
+
+See the crate-level API documentation for the complete syntax reference,
+including `match`, local Rust statements, quoted names, and attribute behavior.
+
+## escaping
+
+Escaping is the default:
+
+* Static string literals are escaped at compile time.
+* Dynamic strings and characters are escaped when rendered.
+* `false` and `None` omit an attribute.
+* `true` emits a boolean attribute as `name="name"`.
+
+Use `Raw` only for trusted, already-rendered markup:
+
+```rust
+use avosetta::{asx, Html, Raw};
+
+let trusted = "<strong>Already rendered</strong>";
+let template = asx! {
+    div { @Raw(trusted) }
+};
+
+let mut html = String::new();
+template.write(&mut html);
+```
+
+`Raw` bypasses HTML escaping. Never use it with untrusted or user-controlled input.
+
+## performance
+
+`avosetta` generates string-writing code rather than constructing an
+intermediate representation at runtime. Static runs are combined, static text
+is escaped during compilation, and dynamic values write directly into the
+destination buffer through `Html`.
+
+This keeps the runtime path close to the final operation the application needs:
+appending HTML to a `String`.
+
+## license
+
+`avosetta` is licensed under the MIT License. See `LICENSE` for details.
+
+## contributing
+
+Contributions are welcome.
+
+Please follow the existing code style and conventions used throughout the
+project. If you're proposing a new feature or API, opening an issue first is
+often the easiest way to discuss the design.

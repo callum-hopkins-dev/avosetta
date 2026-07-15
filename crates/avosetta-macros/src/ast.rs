@@ -1,79 +1,92 @@
+use proc_macro2::TokenStream;
+use quote::ToTokens;
 use syn::{
-    Expr, Ident, LitStr, Pat, Token,
+    Expr, Ident, LitStr, Pat, Stmt, Token,
     punctuated::Punctuated,
     token::{Brace, Bracket},
 };
 
-#[derive(Clone)]
+pub struct Input {
+    pub crate_ident: CrateIdent,
+    pub _comma: Token![,],
+    pub tokens: TokenStream,
+}
+
+pub enum CrateIdent {
+    Crate(Token![crate]),
+    Ident(Ident),
+}
+
+impl Clone for CrateIdent {
+    #[inline]
+    fn clone(&self) -> Self {
+        match self {
+            Self::Crate(x) => Self::Crate(Token![crate](x.span)),
+            Self::Ident(x) => Self::Ident(x.clone()),
+        }
+    }
+}
+
 pub struct Group(pub Box<[Node]>);
 
-#[derive(Clone)]
+#[allow(clippy::large_enum_variant)]
 pub enum Node {
     Element(Element),
     Interp(Interp),
     Literal(LitStr),
 }
 
-#[derive(Clone)]
 pub enum Element {
     Normal(Normal),
     Void(Void),
 }
 
-#[derive(Clone)]
 pub struct Normal {
     pub name: Name,
-    pub attrs: Option<Attrs>,
+    pub attrs: Attrs,
     pub _brace: Brace,
-    pub inner: Option<Group>,
+    pub inner: Group,
 }
 
-#[derive(Clone)]
 pub struct Void {
     pub name: Name,
-    pub attrs: Option<Attrs>,
+    pub attrs: Attrs,
     pub _semi_token: Token![;],
 }
 
-#[derive(Clone)]
 pub enum Name {
     Lit(LitStr),
     Ident(Ident),
 }
 
-#[derive(Clone)]
 pub struct Attrs {
     pub _bracket: Bracket,
     pub inner: Punctuated<Attr, Token![,]>,
 }
 
-#[derive(Clone)]
 pub struct Attr {
     pub name: Name,
     pub value: Option<AttrValue>,
 }
 
-#[derive(Clone)]
 pub struct AttrValue {
     pub _eq_token: Token![=],
     pub expr: Expr,
 }
 
-#[derive(Clone)]
 pub struct Interp {
     pub _at_token: Token![@],
     pub value: InterpValue,
 }
 
-#[derive(Clone)]
 pub enum InterpValue {
     Match(InterpMatch),
     If(InterpIf),
-    Expr(Expr),
     For(InterpFor),
+    Expr(Expr),
+    Stmt(Stmt),
 }
 
-#[derive(Clone)]
 pub struct InterpFor {
     pub _for_token: Token![for],
     pub pat: Pat,
@@ -83,7 +96,6 @@ pub struct InterpFor {
     pub body: Group,
 }
 
-#[derive(Clone)]
 pub struct InterpMatch {
     pub _match_token: Token![match],
     pub expr: Expr,
@@ -91,7 +103,6 @@ pub struct InterpMatch {
     pub arms: Box<[InterpArm]>,
 }
 
-#[derive(Clone)]
 pub struct InterpArm {
     pub pat: Pat,
     pub _fat_arrow_token: Token![=>],
@@ -99,19 +110,16 @@ pub struct InterpArm {
     pub _comma_token: Option<Token![,]>,
 }
 
-#[derive(Clone)]
 pub enum InterpArmExpr {
     Group(InterpArmGroup),
     Literal(LitStr),
 }
 
-#[derive(Clone)]
 pub struct InterpArmGroup {
     pub _brace: Brace,
     pub group: Group,
 }
 
-#[derive(Clone)]
 pub struct InterpIf {
     pub _if_token: Token![if],
     pub cond: Expr,
@@ -121,7 +129,6 @@ pub struct InterpIf {
     pub else_branch: Option<InterpElse>,
 }
 
-#[derive(Clone)]
 pub struct InterpElseIf {
     pub _else_token: Token![else],
     pub _if_token: Token![if],
@@ -130,9 +137,18 @@ pub struct InterpElseIf {
     pub group: Group,
 }
 
-#[derive(Clone)]
 pub struct InterpElse {
     pub _else_token: Token![else],
     pub _brace: Brace,
     pub group: Group,
+}
+
+impl ToTokens for CrateIdent {
+    #[inline]
+    fn to_tokens(&self, tokens: &mut proc_macro2::TokenStream) {
+        match self {
+            CrateIdent::Crate(x) => x.to_tokens(tokens),
+            CrateIdent::Ident(x) => x.to_tokens(tokens),
+        }
+    }
 }
