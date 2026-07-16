@@ -91,7 +91,9 @@ impl Parse for InterpValue {
         } else if input.peek(Token![let]) {
             Ok(Self::Stmt(input.parse()?))
         } else {
-            if input.fork().parse::<Item>().is_ok() {
+            if let Ok(item) = input.fork().parse::<Item>()
+                && !matches!(item, Item::Macro(_))
+            {
                 Ok(Self::Stmt(Stmt::Item(input.parse()?)))
             } else {
                 Ok(Self::Expr(input.parse()?))
