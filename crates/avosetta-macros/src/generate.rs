@@ -388,7 +388,12 @@ impl Generate for Attr {
                 stream.push_raw("\"");
             }
 
-            None => {}
+            None => {
+                self.name.generate(stream);
+                stream.push_raw("=\"");
+                self.name.generate(stream);
+                stream.push_raw("\"");
+            }
 
             Some(AttrValue { expr, .. }) => {
                 let name = match &self.name {
