@@ -1,8 +1,8 @@
 use crate::html::{Chain, Segments, Text};
 use crate::{Attributes, Html};
 
-#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[doc(hidden)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Element<N, A, C> {
     pub name: N,
     pub attrs: A,
@@ -45,8 +45,8 @@ where
     }
 }
 
-#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[doc(hidden)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Void<N, A> {
     pub name: N,
     pub attrs: A,
@@ -103,7 +103,6 @@ macro_rules! __void {
         $(#[$meta])*
         $vis fn $ident(
             attrs: $crate::Attrs<impl $crate::Attributes>,
-            _children: $crate::Children<impl $crate::Html>,
         ) -> impl $crate::Html {
             $crate::elements::Void {
                 name: $crate::__static_text!(@raw ::core::stringify!($ident)),
@@ -114,1999 +113,1999 @@ macro_rules! __void {
 }
 
 __element! {
-    /// `<a>`
+    /// Creates an HTML `<a>` element.
     ///
-    /// The **`<a>`** HTML element (or _anchor_ element), with its `href` attribute, creates a hyperlink to web pages, files, email addresses, locations in the same…
+    /// The `<a>` HTML element creates a hyperlink to a URL, file, email address, or location within a page.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/a)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/a)
     pub fn a;
 }
 
 __element! {
-    /// `<abbr>`
+    /// Creates an HTML `<abbr>` element.
     ///
-    /// The **`<abbr>`** HTML element represents an abbreviation or acronym.
+    /// The `<abbr>` HTML element represents an abbreviation or acronym.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/abbr)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/abbr)
     pub fn abbr;
 }
 
 __element! {
-    /// `<acronym>`
+    /// Creates an HTML `<acronym>` element.
     ///
-    /// The **`<acronym>`** HTML element allows authors to clearly indicate a sequence of characters that compose an acronym or abbreviation for a word.
+    /// The `<acronym>` HTML element allows authors to clearly indicate a sequence of characters that compose an acronym or abbreviation for a word.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/acronym)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/acronym)
     pub fn acronym;
 }
 
 __element! {
-    /// `<address>`
+    /// Creates an HTML `<address>` element.
     ///
-    /// The **`<address>`** HTML element indicates that the enclosed HTML provides contact information for a person or people, or for an organization.
+    /// The `<address>` HTML element indicates that the enclosed HTML provides contact information for a person or people, or for an organization.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/address)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/address)
     pub fn address;
 }
 
 __void! {
-    /// `<area>`
+    /// Creates an HTML `<area>` element.
     ///
-    /// The **`<area>`** HTML element defines an area inside an image map that has predefined clickable areas.
+    /// The `<area>` HTML element defines an area inside an image map that has predefined clickable areas.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/area)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/area)
     pub fn area;
 }
 
 __element! {
-    /// `<article>`
+    /// Creates an HTML `<article>` element.
     ///
-    /// The **`<article>`** HTML element represents a self-contained composition in a document, page, application, or site, which is intended to be independently distributable or reusable…
+    /// The `<article>` HTML element represents a self-contained composition that can stand on its own or be reused independently.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/article)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/article)
     pub fn article;
 }
 
 __element! {
-    /// `<aside>`
+    /// Creates an HTML `<aside>` element.
     ///
-    /// The **`<aside>`** HTML element represents a portion of a document whose content is only indirectly related to the document's main content.
+    /// The `<aside>` HTML element represents a portion of a document whose content is only indirectly related to the document's main content.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/aside)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/aside)
     pub fn aside;
 }
 
 __element! {
-    /// `<audio>`
+    /// Creates an HTML `<audio>` element.
     ///
-    /// The **`<audio>`** HTML element is used to embed sound content in documents.
+    /// The `<audio>` HTML element is used to embed sound content in documents.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/audio)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/audio)
     pub fn audio;
 }
 
 __element! {
-    /// `<b>`
+    /// Creates an HTML `<b>` element.
     ///
-    /// The **`<b>`** HTML element is used to draw the reader's attention to the element's contents, which are not otherwise granted special importance.
+    /// The `<b>` HTML element is used to draw the reader's attention to the element's contents, which are not otherwise granted special importance.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/b)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/b)
     pub fn b;
 }
 
 __void! {
-    /// `<base>`
+    /// Creates an HTML `<base>` element.
     ///
-    /// The **`<base>`** HTML element specifies the base URL to use for all _relative_ URLs in a document.
+    /// The `<base>` HTML element specifies the base URL to use for all _relative_ URLs in a document.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/base)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/base)
     pub fn base;
 }
 
 __element! {
-    /// `<bdi>`
+    /// Creates an HTML `<bdi>` element.
     ///
-    /// The **`<bdi>`** HTML element tells the browser's bidirectional algorithm to treat the text it contains in isolation from its surrounding text.
+    /// The `<bdi>` HTML element tells the browser's bidirectional algorithm to treat the text it contains in isolation from its surrounding text.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/bdi)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/bdi)
     pub fn bdi;
 }
 
 __element! {
-    /// `<bdo>`
+    /// Creates an HTML `<bdo>` element.
     ///
-    /// The **`<bdo>`** HTML element overrides the current directionality of text, so that the text within is rendered in a different direction.
+    /// The `<bdo>` HTML element overrides the current directionality of text, so that the text within is rendered in a different direction.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/bdo)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/bdo)
     pub fn bdo;
 }
 
 __element! {
-    /// `<big>`
+    /// Creates an HTML `<big>` element.
     ///
-    /// The **`<big>`** HTML deprecated element renders the enclosed text at a font size one level larger than the surrounding text (`medium` becomes `large`, for example).
+    /// The `<big>` HTML deprecated element renders the enclosed text at a font size one level larger than the surrounding text (`medium` becomes `large`, for example).
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/big)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/big)
     pub fn big;
 }
 
 __element! {
-    /// `<blockquote>`
+    /// Creates an HTML `<blockquote>` element.
     ///
-    /// The **`<blockquote>`** HTML element indicates that the enclosed text is an extended quotation.
+    /// The `<blockquote>` HTML element indicates that the enclosed text is an extended quotation.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/blockquote)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/blockquote)
     pub fn blockquote;
 }
 
 __element! {
-    /// `<body>`
+    /// Creates an HTML `<body>` element.
     ///
-    /// The **`<body>`** HTML element represents the content of an HTML document.
+    /// The `<body>` HTML element represents the content of an HTML document.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/body)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/body)
     pub fn body;
 }
 
 __void! {
-    /// `<br>`
+    /// Creates an HTML `<br>` element.
     ///
-    /// The **`<br>`** HTML element produces a line break in text (carriage-return).
+    /// The `<br>` HTML element produces a line break in text (carriage-return).
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/br)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/br)
     pub fn br;
 }
 
 __element! {
-    /// `<button>`
+    /// Creates an HTML `<button>` element.
     ///
-    /// The **`<button>`** HTML element is an interactive element activated by a user with a mouse, keyboard, finger, voice command, or other assistive technology.
+    /// The `<button>` HTML element is an interactive element activated by a user with a mouse, keyboard, finger, voice command, or other assistive technology.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/button)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/button)
     pub fn button;
 }
 
 __element! {
-    /// `<canvas>`
+    /// Creates an HTML `<canvas>` element.
     ///
-    /// Use the **HTML `<canvas>` element** with either the canvas scripting API or the WebGL API to draw graphics and animations.
+    /// The `<canvas>` HTML element provides a drawing surface for the Canvas and WebGL APIs.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/canvas)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/canvas)
     pub fn canvas;
 }
 
 __element! {
-    /// `<caption>`
+    /// Creates an HTML `<caption>` element.
     ///
-    /// The **`<caption>`** HTML element specifies the caption (or title) of a table, providing the table an accessible name or accessible description.
+    /// The `<caption>` HTML element specifies the caption (or title) of a table, providing the table an accessible name or accessible description.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/caption)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/caption)
     pub fn caption;
 }
 
 __element! {
-    /// `<center>`
+    /// Creates an HTML `<center>` element.
     ///
-    /// The **`<center>`** HTML element is a block-level element that displays its block-level or inline contents centered horizontally within its containing element.
+    /// The `<center>` HTML element is a block-level element that displays its block-level or inline contents centered horizontally within its containing element.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/center)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/center)
     pub fn center;
 }
 
 __element! {
-    /// `<cite>`
+    /// Creates an HTML `<cite>` element.
     ///
-    /// The **`<cite>`** HTML element is used to mark up the title of a creative work.
+    /// The `<cite>` HTML element is used to mark up the title of a creative work.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/cite)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/cite)
     pub fn cite;
 }
 
 __element! {
-    /// `<code>`
+    /// Creates an HTML `<code>` element.
     ///
-    /// The **`<code>`** HTML element displays its contents styled in a fashion intended to indicate that the text is a short fragment of computer code.
+    /// The `<code>` HTML element displays its contents styled in a fashion intended to indicate that the text is a short fragment of computer code.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/code)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/code)
     pub fn code;
 }
 
 __void! {
-    /// `<col>`
+    /// Creates an HTML `<col>` element.
     ///
-    /// The **`<col>`** HTML element defines one or more columns in a column group represented by its parent `<colgroup>` element.
+    /// The `<col>` HTML element defines one or more columns in a column group represented by its parent `<colgroup>` element.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/col)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/col)
     pub fn col;
 }
 
 __element! {
-    /// `<colgroup>`
+    /// Creates an HTML `<colgroup>` element.
     ///
-    /// The **`<colgroup>`** HTML element defines a group of columns within a table.
+    /// The `<colgroup>` HTML element defines a group of columns within a table.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/colgroup)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/colgroup)
     pub fn colgroup;
 }
 
 __element! {
-    /// `<data>`
+    /// Creates an HTML `<data>` element.
     ///
-    /// The **`<data>`** HTML element links a given piece of content with a machine-readable translation.
+    /// The `<data>` HTML element links a given piece of content with a machine-readable translation.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/data)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/data)
     pub fn data;
 }
 
 __element! {
-    /// `<datalist>`
+    /// Creates an HTML `<datalist>` element.
     ///
-    /// The **`<datalist>`** HTML element contains a set of `<option>` elements that represent the permissible or recommended options available to choose from within other controls.
+    /// The `<datalist>` HTML element contains a set of `<option>` elements that represent the permissible or recommended options available to choose from within other controls.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/datalist)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/datalist)
     pub fn datalist;
 }
 
 __element! {
-    /// `<dd>`
+    /// Creates an HTML `<dd>` element.
     ///
-    /// The **`<dd>`** HTML element provides the description, definition, or value for the preceding term (`<dt>`) in a description list (`<dl>`).
+    /// The `<dd>` HTML element provides the description, definition, or value for the preceding term (`<dt>`) in a description list (`<dl>`).
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dd)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dd)
     pub fn dd;
 }
 
 __element! {
-    /// `<del>`
+    /// Creates an HTML `<del>` element.
     ///
-    /// The **`<del>`** HTML element represents a range of text that has been deleted from a document.
+    /// The `<del>` HTML element represents a range of text that has been deleted from a document.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/del)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/del)
     pub fn del;
 }
 
 __element! {
-    /// `<details>`
+    /// Creates an HTML `<details>` element.
     ///
-    /// The **`<details>`** HTML element creates a disclosure widget in which information is visible only when the widget is toggled into an open state.
+    /// The `<details>` HTML element creates a disclosure widget in which information is visible only when the widget is toggled into an open state.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/details)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/details)
     pub fn details;
 }
 
 __element! {
-    /// `<dfn>`
+    /// Creates an HTML `<dfn>` element.
     ///
-    /// The **`<dfn>`** HTML element indicates a term to be defined.
+    /// The `<dfn>` HTML element indicates a term to be defined.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dfn)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dfn)
     pub fn dfn;
 }
 
 __element! {
-    /// `<dialog>`
+    /// Creates an HTML `<dialog>` element.
     ///
-    /// The **`<dialog>`** HTML element represents a modal or non-modal dialog box or other interactive component, such as a dismissible alert, inspector, or subwindow.
+    /// The `<dialog>` HTML element represents a modal or non-modal dialog box or other interactive component, such as a dismissible alert, inspector, or subwindow.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog)
     pub fn dialog;
 }
 
 __element! {
-    /// `<dir>`
+    /// Creates an HTML `<dir>` element.
     ///
-    /// The **`<dir>`** HTML element is used as a container for a directory of files and/or folders, potentially with styles and icons applied by the…
+    /// The obsolete `<dir>` HTML element represents a directory of files or folders.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dir)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dir)
     pub fn dir;
 }
 
 __element! {
-    /// `<div>`
+    /// Creates an HTML `<div>` element.
     ///
-    /// The **`<div>`** HTML element is the generic container for flow content.
+    /// The `<div>` HTML element is the generic container for flow content.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/div)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/div)
     pub fn div;
 }
 
 __element! {
-    /// `<dl>`
+    /// Creates an HTML `<dl>` element.
     ///
-    /// The **`<dl>`** HTML element represents a description list.
+    /// The `<dl>` HTML element represents a description list.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dl)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dl)
     pub fn dl;
 }
 
 __element! {
-    /// `<dt>`
+    /// Creates an HTML `<dt>` element.
     ///
-    /// The **`<dt>`** HTML element specifies a term in a description or definition list, and as such must be used inside a `<dl>` element.
+    /// The `<dt>` HTML element specifies a term in a description or definition list, and as such must be used inside a `<dl>` element.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dt)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dt)
     pub fn dt;
 }
 
 __element! {
-    /// `<em>`
+    /// Creates an HTML `<em>` element.
     ///
-    /// The **`<em>`** HTML element marks text that has stress emphasis.
+    /// The `<em>` HTML element marks text that has stress emphasis.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/em)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/em)
     pub fn em;
 }
 
 __void! {
-    /// `<embed>`
+    /// Creates an HTML `<embed>` element.
     ///
-    /// The **`<embed>`** HTML element embeds external content at the specified point in the document.
+    /// The `<embed>` HTML element embeds external content at the specified point in the document.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/embed)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/embed)
     pub fn embed;
 }
 
 __element! {
-    /// `<fencedframe>`
+    /// Creates an HTML `<fencedframe>` element.
     ///
-    /// The **`<fencedframe>`** HTML element represents a nested browsing context, embedding another HTML page into the current one.
+    /// The `<fencedframe>` HTML element represents a nested browsing context, embedding another HTML page into the current one.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/fencedframe)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/fencedframe)
     pub fn fencedframe;
 }
 
 __element! {
-    /// `<fieldset>`
+    /// Creates an HTML `<fieldset>` element.
     ///
-    /// The **`<fieldset>`** HTML element is used to group several controls as well as labels (`<label>`) within a web form.
+    /// The `<fieldset>` HTML element is used to group several controls as well as labels (`<label>`) within a web form.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/fieldset)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/fieldset)
     pub fn fieldset;
 }
 
 __element! {
-    /// `<figcaption>`
+    /// Creates an HTML `<figcaption>` element.
     ///
-    /// The **`<figcaption>`** HTML element represents a caption or legend describing the rest of the contents of its parent `<figure>` element, providing the `<figure>` an…
+    /// The `<figcaption>` HTML element provides a caption or legend for its parent `<figure>`.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/figcaption)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/figcaption)
     pub fn figcaption;
 }
 
 __element! {
-    /// `<figure>`
+    /// Creates an HTML `<figure>` element.
     ///
-    /// The **`<figure>`** HTML element represents self-contained content, potentially with an optional caption, which is specified using the `<figcaption>` element.
+    /// The `<figure>` HTML element represents self-contained content, potentially with an optional caption, which is specified using the `<figcaption>` element.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/figure)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/figure)
     pub fn figure;
 }
 
 __element! {
-    /// `<font>`
+    /// Creates an HTML `<font>` element.
     ///
-    /// The **`<font>`** HTML element defines the font size, color and face for its content.
+    /// The `<font>` HTML element defines the font size, color and face for its content.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/font)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/font)
     pub fn font;
 }
 
 __element! {
-    /// `<footer>`
+    /// Creates an HTML `<footer>` element.
     ///
-    /// The **`<footer>`** HTML element represents a footer for its nearest ancestor sectioning content or sectioning root element.
+    /// The `<footer>` HTML element represents a footer for its nearest ancestor sectioning content or sectioning root element.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/footer)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/footer)
     pub fn footer;
 }
 
 __element! {
-    /// `<form>`
+    /// Creates an HTML `<form>` element.
     ///
-    /// The **`<form>`** HTML element represents a document section containing interactive controls for submitting information.
+    /// The `<form>` HTML element represents a document section containing interactive controls for submitting information.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/form)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/form)
     pub fn form;
 }
 
 __void! {
-    /// `<frame>`
+    /// Creates an HTML `<frame>` element.
     ///
-    /// The **`<frame>`** HTML element defines a particular area in which another HTML document can be displayed.
+    /// The `<frame>` HTML element defines a particular area in which another HTML document can be displayed.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/frame)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/frame)
     pub fn frame;
 }
 
 __element! {
-    /// `<frameset>`
+    /// Creates an HTML `<frameset>` element.
     ///
-    /// The **`<frameset>`** HTML element is used to contain `<frame>` elements.
+    /// The `<frameset>` HTML element is used to contain `<frame>` elements.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/frameset)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/frameset)
     pub fn frameset;
 }
 
 __element! {
-    /// `<geolocation>`
+    /// Creates an HTML `<geolocation>` element.
     ///
-    /// The **`<geolocation>`** HTML element creates an interactive control for the user to share their location data with the page.
+    /// The `<geolocation>` HTML element creates an interactive control for the user to share their location data with the page.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/geolocation)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/geolocation)
     pub fn geolocation;
 }
 
 __element! {
-    /// `<head>`
+    /// Creates an HTML `<head>` element.
     ///
-    /// The **`<head>`** HTML element contains machine-readable information (metadata) about the document, like its title, scripts, and style sheets.
+    /// The `<head>` HTML element contains machine-readable information (metadata) about the document, like its title, scripts, and style sheets.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/head)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/head)
     pub fn head;
 }
 
 __element! {
-    /// `<header>`
+    /// Creates an HTML `<header>` element.
     ///
-    /// The **`<header>`** HTML element represents introductory content, typically a group of introductory or navigational aids.
+    /// The `<header>` HTML element represents introductory content, typically a group of introductory or navigational aids.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/header)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/header)
     pub fn header;
 }
 
 __element! {
-    /// `<h1>`
+    /// Creates an HTML `<h1>` element.
     ///
-    /// The **`<h1>`** to **`<h6>`** HTML elements represent six levels of section headings.
+    /// The `<h1>` to `<h6>` HTML elements represent six levels of section headings.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/Heading_Elements)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/Heading_Elements)
     pub fn h1;
 }
 
 __element! {
-    /// `<h2>`
+    /// Creates an HTML `<h2>` element.
     ///
-    /// The **`<h1>`** to **`<h6>`** HTML elements represent six levels of section headings.
+    /// The `<h1>` to `<h6>` HTML elements represent six levels of section headings.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/Heading_Elements)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/Heading_Elements)
     pub fn h2;
 }
 
 __element! {
-    /// `<h3>`
+    /// Creates an HTML `<h3>` element.
     ///
-    /// The **`<h1>`** to **`<h6>`** HTML elements represent six levels of section headings.
+    /// The `<h1>` to `<h6>` HTML elements represent six levels of section headings.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/Heading_Elements)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/Heading_Elements)
     pub fn h3;
 }
 
 __element! {
-    /// `<h4>`
+    /// Creates an HTML `<h4>` element.
     ///
-    /// The **`<h1>`** to **`<h6>`** HTML elements represent six levels of section headings.
+    /// The `<h1>` to `<h6>` HTML elements represent six levels of section headings.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/Heading_Elements)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/Heading_Elements)
     pub fn h4;
 }
 
 __element! {
-    /// `<h5>`
+    /// Creates an HTML `<h5>` element.
     ///
-    /// The **`<h1>`** to **`<h6>`** HTML elements represent six levels of section headings.
+    /// The `<h1>` to `<h6>` HTML elements represent six levels of section headings.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/Heading_Elements)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/Heading_Elements)
     pub fn h5;
 }
 
 __element! {
-    /// `<h6>`
+    /// Creates an HTML `<h6>` element.
     ///
-    /// The **`<h1>`** to **`<h6>`** HTML elements represent six levels of section headings.
+    /// The `<h1>` to `<h6>` HTML elements represent six levels of section headings.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/Heading_Elements)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/Heading_Elements)
     pub fn h6;
 }
 
 __element! {
-    /// `<hgroup>`
+    /// Creates an HTML `<hgroup>` element.
     ///
-    /// The **`<hgroup>`** HTML element represents a heading and related content.
+    /// The `<hgroup>` HTML element represents a heading and related content.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/hgroup)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/hgroup)
     pub fn hgroup;
 }
 
 __void! {
-    /// `<hr>`
+    /// Creates an HTML `<hr>` element.
     ///
-    /// The **`<hr>`** HTML element represents a thematic break between elements: for example, a change of scene in a story, or a shift of topic…
+    /// The `<hr>` HTML element represents a thematic break between sections of content.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/hr)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/hr)
     pub fn hr;
 }
 
 __element! {
-    /// `<html>`
+    /// Creates an HTML `<html>` element.
     ///
-    /// The **`<html>`** HTML element represents the root (top-level element) of an HTML document, so it is also referred to as the *root element*. All other elements must be descendants of this element. There can be only one `<html>` element in a document.
+    /// The `<html>` HTML element represents the root (top-level element) of an HTML document, so it is also referred to as the *root element*. All other elements must be descendants of this element. There can be only one `<html>` element in a document.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/html)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/html)
     pub fn html;
 }
 
 __element! {
-    /// `<i>`
+    /// Creates an HTML `<i>` element.
     ///
-    /// The **`<i>`** HTML element represents a range of text that is set off from the normal text for some reason, such as idiomatic text…
+    /// The `<i>` HTML element marks text that is set apart from the surrounding prose, such as an idiom, technical term, or taxonomic name.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/i)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/i)
     pub fn i;
 }
 
 __element! {
-    /// `<iframe>`
+    /// Creates an HTML `<iframe>` element.
     ///
-    /// The **`<iframe>`** HTML element represents a nested browsing context, embedding another document into the current one.
+    /// The `<iframe>` HTML element represents a nested browsing context, embedding another document into the current one.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/iframe)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/iframe)
     pub fn iframe;
 }
 
 __void! {
-    /// `<img>`
+    /// Creates an HTML `<img>` element.
     ///
-    /// The **`<img>`** HTML element embeds an image into the document.
+    /// The `<img>` HTML element embeds an image into the document.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/img)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/img)
     pub fn img;
 }
 
 __void! {
-    /// `<input>`
+    /// Creates an HTML `<input>` element.
     ///
-    /// The **`<input>`** HTML element is used to create interactive controls for web-based forms in order to accept data from the user; a wide variety…
+    /// The `<input>` HTML element creates an interactive form control for collecting user input.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input)
     pub fn input;
 }
 
 __element! {
-    /// `<ins>`
+    /// Creates an HTML `<ins>` element.
     ///
-    /// The **`<ins>`** HTML element represents a range of text that has been added to a document.
+    /// The `<ins>` HTML element represents a range of text that has been added to a document.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/ins)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/ins)
     pub fn ins;
 }
 
 __element! {
-    /// `<kbd>`
+    /// Creates an HTML `<kbd>` element.
     ///
-    /// The **`<kbd>`** HTML element represents user input (typically keyboard input).
+    /// The `<kbd>` HTML element represents user input (typically keyboard input).
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/kbd)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/kbd)
     pub fn kbd;
 }
 
 __element! {
-    /// `<label>`
+    /// Creates an HTML `<label>` element.
     ///
-    /// The **`<label>`** HTML element represents a caption for an item in a user interface.
+    /// The `<label>` HTML element represents a caption for an item in a user interface.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/label)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/label)
     pub fn label;
 }
 
 __element! {
-    /// `<legend>`
+    /// Creates an HTML `<legend>` element.
     ///
-    /// The **`<legend>`** HTML element represents a caption for the content of its parent `<fieldset>`.
+    /// The `<legend>` HTML element represents a caption for the content of its parent `<fieldset>`.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/legend)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/legend)
     pub fn legend;
 }
 
 __element! {
-    /// `<li>`
+    /// Creates an HTML `<li>` element.
     ///
-    /// The **`<li>`** HTML element is used to represent an item in a list.
+    /// The `<li>` HTML element is used to represent an item in a list.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/li)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/li)
     pub fn li;
 }
 
 __void! {
-    /// `<link>`
+    /// Creates an HTML `<link>` element.
     ///
-    /// The **`<link>`** HTML element specifies relationships between the current document and an external resource.
+    /// The `<link>` HTML element specifies relationships between the current document and an external resource.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/link)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/link)
     pub fn link;
 }
 
 __element! {
-    /// `<main>`
+    /// Creates an HTML `<main>` element.
     ///
-    /// The **`<main>`** HTML element represents the dominant content of the `<body>` of a document.
+    /// The `<main>` HTML element represents the dominant content of the `<body>` of a document.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/main)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/main)
     pub fn main;
 }
 
 __element! {
-    /// `<map>`
+    /// Creates an HTML `<map>` element.
     ///
-    /// The **`<map>`** HTML element is used with `<area>` elements to define an image map (a clickable link area).
+    /// The `<map>` HTML element is used with `<area>` elements to define an image map (a clickable link area).
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/map)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/map)
     pub fn map;
 }
 
 __element! {
-    /// `<mark>`
+    /// Creates an HTML `<mark>` element.
     ///
-    /// The **`<mark>`** HTML element represents text which is **marked** or **highlighted** for reference or notation purposes due to the marked passage's relevance in the…
+    /// The `<mark>` HTML element highlights text because it is relevant in the current context.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/mark)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/mark)
     pub fn mark;
 }
 
 __element! {
-    /// `<marquee>`
+    /// Creates an HTML `<marquee>` element.
     ///
-    /// The **`<marquee>`** HTML element is used to insert a scrolling area of text.
+    /// The `<marquee>` HTML element is used to insert a scrolling area of text.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/marquee)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/marquee)
     pub fn marquee;
 }
 
 __element! {
-    /// `<menu>`
+    /// Creates an HTML `<menu>` element.
     ///
-    /// The **`<menu>`** HTML element is described in the HTML specification as a semantic alternative to `<ul>`, but treated by browsers (and exposed through the…
+    /// The `<menu>` HTML element represents an unordered list of items and is treated by browsers like `<ul>`.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/menu)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/menu)
     pub fn menu;
 }
 
 __void! {
-    /// `<meta>`
+    /// Creates an HTML `<meta>` element.
     ///
-    /// The **`<meta>`** HTML element represents Metadata that cannot be represented by other meta-related elements, such as `<base>`, `<link>`, `<script>`, `<style>`, or `<title>`.
+    /// The `<meta>` HTML element represents Metadata that cannot be represented by other meta-related elements, such as `<base>`, `<link>`, `<script>`, `<style>`, or `<title>`.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/meta)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/meta)
     pub fn meta;
 }
 
 __element! {
-    /// `<meter>`
+    /// Creates an HTML `<meter>` element.
     ///
-    /// The **`<meter>`** HTML element represents either a scalar value within a known range or a fractional value.
+    /// The `<meter>` HTML element represents either a scalar value within a known range or a fractional value.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/meter)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/meter)
     pub fn meter;
 }
 
 __element! {
-    /// `<nav>`
+    /// Creates an HTML `<nav>` element.
     ///
-    /// The **`<nav>`** HTML element represents a section of a page whose purpose is to provide navigation links, either within the current document or to…
+    /// The `<nav>` HTML element represents a section containing navigation links.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/nav)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/nav)
     pub fn nav;
 }
 
 __element! {
-    /// `<nobr>`
+    /// Creates an HTML `<nobr>` element.
     ///
-    /// The **`<nobr>`** HTML element prevents the text it contains from automatically wrapping across multiple lines, potentially resulting in the user having to scroll horizontally…
+    /// The obsolete `<nobr>` HTML element prevents its text from wrapping automatically.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/nobr)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/nobr)
     pub fn nobr;
 }
 
 __element! {
-    /// `<noembed>`
+    /// Creates an HTML `<noembed>` element.
     ///
-    /// The **`<noembed>`** HTML element is an obsolete, non-standard way to provide alternative, or "fallback", content for browsers that do not support the `<embed>` element…
+    /// The obsolete `<noembed>` HTML element provides fallback content for browsers that do not support `<embed>`.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/noembed)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/noembed)
     pub fn noembed;
 }
 
 __element! {
-    /// `<noframes>`
+    /// Creates an HTML `<noframes>` element.
     ///
-    /// The **`<noframes>`** HTML element provides content to be presented in browsers that don't support (or have disabled support for) the `<frame>` element.
+    /// The `<noframes>` HTML element provides content to be presented in browsers that don't support (or have disabled support for) the `<frame>` element.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/noframes)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/noframes)
     pub fn noframes;
 }
 
 __element! {
-    /// `<noscript>`
+    /// Creates an HTML `<noscript>` element.
     ///
-    /// The **`<noscript>`** HTML element defines a section of HTML to be inserted if a script type on the page is unsupported or if scripting…
+    /// The `<noscript>` HTML element provides fallback content when scripting is unavailable or disabled.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/noscript)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/noscript)
     pub fn noscript;
 }
 
 __element! {
-    /// `<object>`
+    /// Creates an HTML `<object>` element.
     ///
-    /// The **`<object>`** HTML element represents an external resource, which can be treated as an image, a nested browsing context, or a resource to be…
+    /// The `<object>` HTML element embeds an external resource such as an image, document, or nested browsing context.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/object)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/object)
     pub fn object;
 }
 
 __element! {
-    /// `<ol>`
+    /// Creates an HTML `<ol>` element.
     ///
-    /// The **`<ol>`** HTML element represents an ordered list of items — typically rendered as a numbered list.
+    /// The `<ol>` HTML element represents an ordered list of items — typically rendered as a numbered list.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/ol)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/ol)
     pub fn ol;
 }
 
 __element! {
-    /// `<optgroup>`
+    /// Creates an HTML `<optgroup>` element.
     ///
-    /// The **`<optgroup>`** HTML element creates a grouping of options within a `<select>` element.
+    /// The `<optgroup>` HTML element creates a grouping of options within a `<select>` element.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/optgroup)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/optgroup)
     pub fn optgroup;
 }
 
 __element! {
-    /// `<option>`
+    /// Creates an HTML `<option>` element.
     ///
-    /// The **`<option>`** HTML element is used to define an item contained in a `<select>`, an `<optgroup>`, or a `<datalist>` element.
+    /// The `<option>` HTML element is used to define an item contained in a `<select>`, an `<optgroup>`, or a `<datalist>` element.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/option)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/option)
     pub fn option;
 }
 
 __element! {
-    /// `<output>`
+    /// Creates an HTML `<output>` element.
     ///
-    /// The **`<output>`** HTML element is a container element into which a site or app can inject the results of a calculation or the outcome…
+    /// The `<output>` HTML element contains the result of a calculation or user action.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/output)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/output)
     pub fn output;
 }
 
 __element! {
-    /// `<p>`
+    /// Creates an HTML `<p>` element.
     ///
-    /// The **`<p>`** HTML element represents a paragraph.
+    /// The `<p>` HTML element represents a paragraph.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/p)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/p)
     pub fn p;
 }
 
 __void! {
-    /// `<param>`
+    /// Creates an HTML `<param>` element.
     ///
-    /// The **`<param>`** HTML element defines parameters for an `<object>` element.
+    /// The `<param>` HTML element defines parameters for an `<object>` element.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/param)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/param)
     pub fn param;
 }
 
 __element! {
-    /// `<picture>`
+    /// Creates an HTML `<picture>` element.
     ///
-    /// The **`<picture>`** HTML element contains zero or more `<source>` elements and one `<img>` element to offer alternative versions of an image for different display/device scenarios.
+    /// The `<picture>` HTML element contains zero or more `<source>` elements and one `<img>` element to offer alternative versions of an image for different display/device scenarios.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/picture)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/picture)
     pub fn picture;
 }
 
 __element! {
-    /// `<plaintext>`
+    /// Creates an HTML `<plaintext>` element.
     ///
-    /// The **`<plaintext>`** HTML element renders everything following the start tag as raw text, ignoring any following HTML.
+    /// The `<plaintext>` HTML element renders everything following the start tag as raw text, ignoring any following HTML.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/plaintext)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/plaintext)
     pub fn plaintext;
 }
 
 __element! {
-    /// `<pre>`
+    /// Creates an HTML `<pre>` element.
     ///
-    /// The **`<pre>`** HTML element represents preformatted text which is to be presented exactly as written in the HTML file.
+    /// The `<pre>` HTML element represents preformatted text which is to be presented exactly as written in the HTML file.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/pre)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/pre)
     pub fn pre;
 }
 
 __element! {
-    /// `<progress>`
+    /// Creates an HTML `<progress>` element.
     ///
-    /// The **`<progress>`** HTML element displays an indicator showing the completion progress of a task, typically displayed as a progress bar.
+    /// The `<progress>` HTML element displays an indicator showing the completion progress of a task, typically displayed as a progress bar.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/progress)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/progress)
     pub fn progress;
 }
 
 __element! {
-    /// `<q>`
+    /// Creates an HTML `<q>` element.
     ///
-    /// The **`<q>`** HTML element indicates that the enclosed text is a short inline quotation.
+    /// The `<q>` HTML element indicates that the enclosed text is a short inline quotation.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/q)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/q)
     pub fn q;
 }
 
 __element! {
-    /// `<rb>`
+    /// Creates an HTML `<rb>` element.
     ///
-    /// The **`<rb>`** HTML element is used to delimit the base text component of a annotation, i.e., the text that is being annotated.
+    /// The `<rb>` HTML element identifies the base text of a ruby annotation.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/rb)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/rb)
     pub fn rb;
 }
 
 __element! {
-    /// `<rp>`
+    /// Creates an HTML `<rp>` element.
     ///
-    /// The **`<rp>`** HTML element is used to provide fall-back parentheses for browsers that do not support display of ruby annotations using the element.
+    /// The `<rp>` HTML element provides fallback parentheses for browsers that do not display ruby annotations.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/rp)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/rp)
     pub fn rp;
 }
 
 __element! {
-    /// `<rt>`
+    /// Creates an HTML `<rt>` element.
     ///
-    /// The **`<rt>`** HTML element specifies the ruby text component of a ruby annotation, which is used to provide pronunciation, translation, or transliteration information for…
+    /// The `<rt>` HTML element provides pronunciation, translation, or transliteration text for a ruby annotation.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/rt)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/rt)
     pub fn rt;
 }
 
 __element! {
-    /// `<rtc>`
+    /// Creates an HTML `<rtc>` element.
     ///
-    /// The **`<rtc>`** HTML element embraces semantic annotations of characters presented in a ruby of `<rb>` elements used inside of element.
+    /// The `<rtc>` HTML element embraces semantic annotations of characters presented in a ruby of `<rb>` elements used inside of element.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/rtc)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/rtc)
     pub fn rtc;
 }
 
 __element! {
-    /// `<ruby>`
+    /// Creates an HTML `<ruby>` element.
     ///
-    /// The **`<ruby>`** HTML element represents small annotations that are rendered above, below, or next to base text, usually used for showing the pronunciation of…
+    /// The `<ruby>` HTML element adds small annotations alongside base text, commonly to show pronunciation.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/ruby)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/ruby)
     pub fn ruby;
 }
 
 __element! {
-    /// `<s>`
+    /// Creates an HTML `<s>` element.
     ///
-    /// The **`<s>`** HTML element renders text with a strikethrough, or a line through it.
+    /// The `<s>` HTML element renders text with a strikethrough, or a line through it.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/s)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/s)
     pub fn s;
 }
 
 __element! {
-    /// `<samp>`
+    /// Creates an HTML `<samp>` element.
     ///
-    /// The **`<samp>`** HTML element is used to enclose inline text which represents sample (or quoted) output from a computer program.
+    /// The `<samp>` HTML element is used to enclose inline text which represents sample (or quoted) output from a computer program.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/samp)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/samp)
     pub fn samp;
 }
 
 __element! {
-    /// `<script>`
+    /// Creates an HTML `<script>` element.
     ///
-    /// The **`<script>`** HTML element is used to embed executable code or data; this is typically used to embed or refer to JavaScript code.
+    /// The `<script>` HTML element is used to embed executable code or data; this is typically used to embed or refer to JavaScript code.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/script)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/script)
     pub fn script;
 }
 
 __element! {
-    /// `<search>`
+    /// Creates an HTML `<search>` element.
     ///
-    /// The **`<search>`** HTML element is a container representing the parts of the document or application with form controls or other content related to performing…
+    /// The `<search>` HTML element groups controls and content used to perform or filter a search.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/search)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/search)
     pub fn search;
 }
 
 __element! {
-    /// `<section>`
+    /// Creates an HTML `<section>` element.
     ///
-    /// The **`<section>`** HTML element represents a generic standalone section of a document, which doesn't have a more specific semantic element to represent it.
+    /// The `<section>` HTML element represents a generic standalone section of a document, which doesn't have a more specific semantic element to represent it.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/section)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/section)
     pub fn section;
 }
 
 __element! {
-    /// `<select>`
+    /// Creates an HTML `<select>` element.
     ///
-    /// The **`<select>`** HTML element represents a control that provides a menu of options.
+    /// The `<select>` HTML element represents a control that provides a menu of options.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/select)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/select)
     pub fn select;
 }
 
 __element! {
-    /// `<selectedcontent>`
+    /// Creates an HTML `<selectedcontent>` element.
     ///
-    /// The **`<selectedcontent>`** HTML is used inside a `<select>` element to display the contents of its currently selected `<option>` within its first child `<button>`.
+    /// The `<selectedcontent>` HTML is used inside a `<select>` element to display the contents of its currently selected `<option>` within its first child `<button>`.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/selectedcontent)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/selectedcontent)
     pub fn selectedcontent;
 }
 
 __element! {
-    /// `<slot>`
+    /// Creates an HTML `<slot>` element.
     ///
-    /// The **`<slot>`** HTML element is a placeholder inside a Web Component that you can fill with your own markup when the component is used.
+    /// The `<slot>` HTML element is a placeholder inside a Web Component that you can fill with your own markup when the component is used.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/slot)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/slot)
     pub fn slot;
 }
 
 __element! {
-    /// `<small>`
+    /// Creates an HTML `<small>` element.
     ///
-    /// The **`<small>`** HTML element represents side-comments and small print, like copyright and legal text, independent of its styled presentation.
+    /// The `<small>` HTML element represents side-comments and small print, like copyright and legal text, independent of its styled presentation.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/small)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/small)
     pub fn small;
 }
 
 __void! {
-    /// `<source>`
+    /// Creates an HTML `<source>` element.
     ///
-    /// The **`<source>`** HTML element specifies one or more media resources for the `<picture>`, `<audio>`, and `<video>` elements.
+    /// The `<source>` HTML element specifies one or more media resources for the `<picture>`, `<audio>`, and `<video>` elements.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/source)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/source)
     pub fn source;
 }
 
 __element! {
-    /// `<span>`
+    /// Creates an HTML `<span>` element.
     ///
-    /// The **`<span>`** HTML element is a generic inline container for phrasing content, which does not inherently represent anything.
+    /// The `<span>` HTML element is a generic inline container for phrasing content, which does not inherently represent anything.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/span)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/span)
     pub fn span;
 }
 
 __element! {
-    /// `<strike>`
+    /// Creates an HTML `<strike>` element.
     ///
-    /// The **`<strike>`** HTML element places a strikethrough (horizontal line) over text.
+    /// The `<strike>` HTML element places a strikethrough (horizontal line) over text.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/strike)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/strike)
     pub fn strike;
 }
 
 __element! {
-    /// `<strong>`
+    /// Creates an HTML `<strong>` element.
     ///
-    /// The **`<strong>`** HTML element indicates that its contents have strong importance, seriousness, or urgency.
+    /// The `<strong>` HTML element indicates that its contents have strong importance, seriousness, or urgency.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/strong)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/strong)
     pub fn strong;
 }
 
 __element! {
-    /// `<style>`
+    /// Creates an HTML `<style>` element.
     ///
-    /// The **`<style>`** HTML element contains style information for a document, or part of a document.
+    /// The `<style>` HTML element contains style information for a document, or part of a document.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/style)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/style)
     pub fn style;
 }
 
 __element! {
-    /// `<sub>`
+    /// Creates an HTML `<sub>` element.
     ///
-    /// The **`<sub>`** HTML element specifies inline text which should be displayed as subscript for solely typographical reasons.
+    /// The `<sub>` HTML element specifies inline text which should be displayed as subscript for solely typographical reasons.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/sub)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/sub)
     pub fn sub;
 }
 
 __element! {
-    /// `<summary>`
+    /// Creates an HTML `<summary>` element.
     ///
-    /// The **`<summary>`** HTML element specifies a summary, caption, or legend for a `<details>` element's disclosure box.
+    /// The `<summary>` HTML element specifies a summary, caption, or legend for a `<details>` element's disclosure box.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/summary)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/summary)
     pub fn summary;
 }
 
 __element! {
-    /// `<sup>`
+    /// Creates an HTML `<sup>` element.
     ///
-    /// The **`<sup>`** HTML element specifies inline text which is to be displayed as superscript for solely typographical reasons.
+    /// The `<sup>` HTML element specifies inline text which is to be displayed as superscript for solely typographical reasons.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/sup)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/sup)
     pub fn sup;
 }
 
 __element! {
-    /// `<table>`
+    /// Creates an HTML `<table>` element.
     ///
-    /// The **`<table>`** HTML element represents tabular data—that is, information presented in a two-dimensional table comprised of rows and columns of cells containing data.
+    /// The `<table>` HTML element represents tabular data—that is, information presented in a two-dimensional table comprised of rows and columns of cells containing data.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/table)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/table)
     pub fn table;
 }
 
 __element! {
-    /// `<tbody>`
+    /// Creates an HTML `<tbody>` element.
     ///
-    /// The **`<tbody>`** HTML element encapsulates a set of table rows (`<tr>` elements), indicating that they comprise the body of a table's (main) data.
+    /// The `<tbody>` HTML element encapsulates a set of table rows (`<tr>` elements), indicating that they comprise the body of a table's (main) data.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/tbody)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/tbody)
     pub fn tbody;
 }
 
 __element! {
-    /// `<td>`
+    /// Creates an HTML `<td>` element.
     ///
-    /// The **`<td>`** HTML element defines a cell of a table that contains data and may be used as a child of the `<tr>` element.
+    /// The `<td>` HTML element defines a cell of a table that contains data and may be used as a child of the `<tr>` element.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/td)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/td)
     pub fn td;
 }
 
 __element! {
-    /// `<template>`
+    /// Creates an HTML `<template>` element.
     ///
-    /// The **`<template>`** HTML element serves as a mechanism for holding HTML fragments, which can either be used later via JavaScript, generated immediately and inserted…
+    /// The `<template>` HTML element stores markup that is not rendered immediately and can be instantiated later.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/template)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/template)
     pub fn template;
 }
 
 __element! {
-    /// `<textarea>`
+    /// Creates an HTML `<textarea>` element.
     ///
-    /// The **`<textarea>`** HTML element represents a multi-line plain-text editing control, useful when you want to allow users to enter a sizeable amount of free-form…
+    /// The `<textarea>` HTML element provides a multiline plain-text editing control.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/textarea)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/textarea)
     pub fn textarea;
 }
 
 __element! {
-    /// `<tfoot>`
+    /// Creates an HTML `<tfoot>` element.
     ///
-    /// The **`<tfoot>`** HTML element encapsulates a set of table rows (`<tr>` elements), indicating that they comprise the foot of a table with information about…
+    /// The `<tfoot>` HTML element groups table rows that form a table footer.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/tfoot)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/tfoot)
     pub fn tfoot;
 }
 
 __element! {
-    /// `<th>`
+    /// Creates an HTML `<th>` element.
     ///
-    /// The **`<th>`** HTML element defines a cell as the header of a group of table cells and may be used as a child of…
+    /// The `<th>` HTML element defines a header cell within a table row.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/th)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/th)
     pub fn th;
 }
 
 __element! {
-    /// `<thead>`
+    /// Creates an HTML `<thead>` element.
     ///
-    /// The **`<thead>`** HTML element encapsulates a set of table rows (`<tr>` elements), indicating that they comprise the head of a table with information about…
+    /// The `<thead>` HTML element groups table rows that form a table header.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/thead)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/thead)
     pub fn thead;
 }
 
 __element! {
-    /// `<time>`
+    /// Creates an HTML `<time>` element.
     ///
-    /// The **`<time>`** HTML element represents a specific period in time.
+    /// The `<time>` HTML element represents a specific period in time.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/time)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/time)
     pub fn time;
 }
 
 __element! {
-    /// `<title>`
+    /// Creates an HTML `<title>` element.
     ///
-    /// The **`<title>`** HTML element defines the document's title that is shown in a Browser's title bar or a page's tab.
+    /// The `<title>` HTML element defines the document's title that is shown in a Browser's title bar or a page's tab.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/title)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/title)
     pub fn title;
 }
 
 __element! {
-    /// `<tr>`
+    /// Creates an HTML `<tr>` element.
     ///
-    /// The **`<tr>`** HTML element defines a row of cells in a table.
+    /// The `<tr>` HTML element defines a row of cells in a table.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/tr)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/tr)
     pub fn tr;
 }
 
 __void! {
-    /// `<track>`
+    /// Creates an HTML `<track>` element.
     ///
-    /// The **`<track>`** HTML element is used as a child of the media elements, `<audio>` and `<video>`.
+    /// The `<track>` HTML element is used as a child of the media elements, `<audio>` and `<video>`.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/track)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/track)
     pub fn track;
 }
 
 __element! {
-    /// `<tt>`
+    /// Creates an HTML `<tt>` element.
     ///
-    /// The **`<tt>`** HTML element creates inline text which is presented using the user agent default monospace font face.
+    /// The `<tt>` HTML element creates inline text which is presented using the user agent default monospace font face.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/tt)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/tt)
     pub fn tt;
 }
 
 __element! {
-    /// `<u>`
+    /// Creates an HTML `<u>` element.
     ///
-    /// The **`<u>`** HTML element represents a span of inline text which should be rendered in a way that indicates that it has a non-textual annotation.
+    /// The `<u>` HTML element represents a span of inline text which should be rendered in a way that indicates that it has a non-textual annotation.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/u)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/u)
     pub fn u;
 }
 
 __element! {
-    /// `<ul>`
+    /// Creates an HTML `<ul>` element.
     ///
-    /// The **`<ul>`** HTML element represents an unordered list of items, typically rendered as a bulleted list.
+    /// The `<ul>` HTML element represents an unordered list of items, typically rendered as a bulleted list.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/ul)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/ul)
     pub fn ul;
 }
 
 __element! {
-    /// `<var>`
+    /// Creates an HTML `<var>` element.
     ///
-    /// The **`<var>`** HTML element represents the name of a variable in a mathematical expression or a programming context.
+    /// The `<var>` HTML element represents the name of a variable in a mathematical expression or a programming context.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/var)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/var)
     pub fn var;
 }
 
 __element! {
-    /// `<video>`
+    /// Creates an HTML `<video>` element.
     ///
-    /// The **`<video>`** HTML element embeds a media player which supports video playback into the document.
+    /// The `<video>` HTML element embeds a media player which supports video playback into the document.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/video)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/video)
     pub fn video;
 }
 
 __void! {
-    /// `<wbr>`
+    /// Creates an HTML `<wbr>` element.
     ///
-    /// The **`<wbr>`** HTML element represents a word break opportunity—a position within text where the browser may optionally break a line, though its line-breaking rules…
+    /// The `<wbr>` HTML element marks a position where the browser may break a line.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/wbr)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/wbr)
     pub fn wbr;
 }
 
 __element! {
-    /// `<xmp>`
+    /// Creates an HTML `<xmp>` element.
     ///
-    /// The **`<xmp>`** HTML element renders text between the start and end tags without interpreting the HTML in between and using a monospaced font.
+    /// The `<xmp>` HTML element renders text between the start and end tags without interpreting the HTML in between and using a monospaced font.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/xmp)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/xmp)
     pub fn xmp;
 }
 
 __element! {
-    /// `<animate>`
+    /// Creates an SVG `<animate>` element.
     ///
-    /// The **`<animate>`** SVG element provides a way to animate an attribute of an element over time.
+    /// The `<animate>` SVG element provides a way to animate an attribute of an element over time.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/animate)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/animate)
     pub fn animate;
 }
 
 __element! {
-    /// `<animateMotion>`
+    /// Creates an SVG `<animateMotion>` element.
     ///
-    /// The **`<animateMotion>`** SVG element provides a way to define how an element moves along a motion path.
+    /// The `<animateMotion>` SVG element provides a way to define how an element moves along a motion path.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/animateMotion)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/animateMotion)
     pub fn animateMotion;
 }
 
 __element! {
-    /// `<animateTransform>`
+    /// Creates an SVG `<animateTransform>` element.
     ///
-    /// The **`<animateTransform>`** SVG element animates a transformation attribute on its target element, thereby allowing animations to control translation, scaling, rotation, and/or skewing.
+    /// The `<animateTransform>` SVG element animates translation, scaling, rotation, or skew transformations on its target.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/animateTransform)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/animateTransform)
     pub fn animateTransform;
 }
 
 __element! {
-    /// `<circle>`
+    /// Creates an SVG `<circle>` element.
     ///
-    /// The **`<circle>`** SVG element is an SVG basic shape, used to draw circles based on a center point and a radius.
+    /// The `<circle>` SVG element is an SVG basic shape, used to draw circles based on a center point and a radius.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/circle)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/circle)
     pub fn circle;
 }
 
 __element! {
-    /// `<clipPath>`
+    /// Creates an SVG `<clipPath>` element.
     ///
-    /// The **`<clipPath>`** SVG element defines a clipping path, to be used by the property.
+    /// The `<clipPath>` SVG element defines a clipping path, to be used by the property.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/clipPath)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/clipPath)
     pub fn clipPath;
 }
 
 __element! {
-    /// `<defs>`
+    /// Creates an SVG `<defs>` element.
     ///
-    /// The **`<defs>`** SVG element is used to store graphical objects that will be used at a later time.
+    /// The `<defs>` SVG element is used to store graphical objects that will be used at a later time.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/defs)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/defs)
     pub fn defs;
 }
 
 __element! {
-    /// `<desc>`
+    /// Creates an SVG `<desc>` element.
     ///
-    /// The **`<desc>`** SVG element provides an accessible, long-text description of any SVG container element or graphics element.
+    /// The `<desc>` SVG element provides an accessible, long-text description of any SVG container element or graphics element.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/desc)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/desc)
     pub fn desc;
 }
 
 __element! {
-    /// `<ellipse>`
+    /// Creates an SVG `<ellipse>` element.
     ///
-    /// The **`<ellipse>`** SVG element is an SVG basic shape, used to create ellipses based on a center coordinate, and both their x and y radius.
+    /// The `<ellipse>` SVG element is an SVG basic shape, used to create ellipses based on a center coordinate, and both their x and y radius.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/ellipse)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/ellipse)
     pub fn ellipse;
 }
 
 __element! {
-    /// `<feBlend>`
+    /// Creates an SVG `<feBlend>` element.
     ///
-    /// The **`<feBlend>`** SVG filter primitive composes two objects together ruled by a certain blending mode.
+    /// The `<feBlend>` SVG filter primitive composes two objects together ruled by a certain blending mode.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feBlend)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feBlend)
     pub fn feBlend;
 }
 
 __element! {
-    /// `<feColorMatrix>`
+    /// Creates an SVG `<feColorMatrix>` element.
     ///
-    /// The **`<feColorMatrix>`** SVG filter element changes colors based on a transformation matrix.
+    /// The `<feColorMatrix>` SVG filter element changes colors based on a transformation matrix.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feColorMatrix)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feColorMatrix)
     pub fn feColorMatrix;
 }
 
 __element! {
-    /// `<feComponentTransfer>`
+    /// Creates an SVG `<feComponentTransfer>` element.
     ///
-    /// The **`<feComponentTransfer>`** SVG filter primitive performs color-component-wise remapping of data for each pixel.
+    /// The `<feComponentTransfer>` SVG filter primitive performs color-component-wise remapping of data for each pixel.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feComponentTransfer)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feComponentTransfer)
     pub fn feComponentTransfer;
 }
 
 __element! {
-    /// `<feComposite>`
+    /// Creates an SVG `<feComposite>` element.
     ///
-    /// The **`<feComposite>`** SVG filter primitive performs the combination of two input images pixel-wise in image space using one of the Porter-Duff compositing operations: `over`…
+    /// The `<feComposite>` SVG filter primitive combines two input images pixel by pixel using a selected compositing operation.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feComposite)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feComposite)
     pub fn feComposite;
 }
 
 __element! {
-    /// `<feConvolveMatrix>`
+    /// Creates an SVG `<feConvolveMatrix>` element.
     ///
-    /// The **`<feConvolveMatrix>`** SVG filter primitive applies a matrix convolution filter effect.
+    /// The `<feConvolveMatrix>` SVG filter primitive applies a matrix convolution filter effect.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feConvolveMatrix)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feConvolveMatrix)
     pub fn feConvolveMatrix;
 }
 
 __element! {
-    /// `<feDiffuseLighting>`
+    /// Creates an SVG `<feDiffuseLighting>` element.
     ///
-    /// The **`<feDiffuseLighting>`** SVG filter primitive lights an image using the alpha channel as a bump map.
+    /// The `<feDiffuseLighting>` SVG filter primitive lights an image using the alpha channel as a bump map.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feDiffuseLighting)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feDiffuseLighting)
     pub fn feDiffuseLighting;
 }
 
 __element! {
-    /// `<feDisplacementMap>`
+    /// Creates an SVG `<feDisplacementMap>` element.
     ///
-    /// The **`<feDisplacementMap>`** SVG filter primitive uses the pixel values from the image from to spatially displace the image from .
+    /// The `<feDisplacementMap>` SVG filter primitive uses the pixel values from the image from to spatially displace the image from .
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feDisplacementMap)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feDisplacementMap)
     pub fn feDisplacementMap;
 }
 
 __element! {
-    /// `<feDistantLight>`
+    /// Creates an SVG `<feDistantLight>` element.
     ///
-    /// The **`<feDistantLight>`** SVG element defines a distant light source that can be used within a lighting filter primitive: `<feDiffuseLighting>` or `<feSpecularLighting>`.
+    /// The `<feDistantLight>` SVG element defines a distant light source that can be used within a lighting filter primitive: `<feDiffuseLighting>` or `<feSpecularLighting>`.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feDistantLight)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feDistantLight)
     pub fn feDistantLight;
 }
 
 __element! {
-    /// `<feDropShadow>`
+    /// Creates an SVG `<feDropShadow>` element.
     ///
-    /// The **`<feDropShadow>`** SVG filter primitive creates a drop shadow of the input image.
+    /// The `<feDropShadow>` SVG filter primitive creates a drop shadow of the input image.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feDropShadow)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feDropShadow)
     pub fn feDropShadow;
 }
 
 __element! {
-    /// `<feFlood>`
+    /// Creates an SVG `<feFlood>` element.
     ///
-    /// The **`<feFlood>`** SVG filter primitive fills the filter subregion with the color and opacity defined by and .
+    /// The `<feFlood>` SVG filter primitive fills the filter subregion with the color and opacity defined by and .
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feFlood)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feFlood)
     pub fn feFlood;
 }
 
 __element! {
-    /// `<feFuncA>`
+    /// Creates an SVG `<feFuncA>` element.
     ///
-    /// The **`<feFuncA>`** SVG filter primitive defines the transfer function for the alpha component of the input graphic of its parent `<feComponentTransfer>` element.
+    /// The `<feFuncA>` SVG filter primitive defines the transfer function for the alpha component of the input graphic of its parent `<feComponentTransfer>` element.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feFuncA)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feFuncA)
     pub fn feFuncA;
 }
 
 __element! {
-    /// `<feFuncB>`
+    /// Creates an SVG `<feFuncB>` element.
     ///
-    /// The **`<feFuncB>`** SVG filter primitive defines the transfer function for the blue component of the input graphic of its parent `<feComponentTransfer>` element.
+    /// The `<feFuncB>` SVG filter primitive defines the transfer function for the blue component of the input graphic of its parent `<feComponentTransfer>` element.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feFuncB)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feFuncB)
     pub fn feFuncB;
 }
 
 __element! {
-    /// `<feFuncG>`
+    /// Creates an SVG `<feFuncG>` element.
     ///
-    /// The **`<feFuncG>`** SVG filter primitive defines the transfer function for the green component of the input graphic of its parent `<feComponentTransfer>` element.
+    /// The `<feFuncG>` SVG filter primitive defines the transfer function for the green component of the input graphic of its parent `<feComponentTransfer>` element.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feFuncG)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feFuncG)
     pub fn feFuncG;
 }
 
 __element! {
-    /// `<feFuncR>`
+    /// Creates an SVG `<feFuncR>` element.
     ///
-    /// The **`<feFuncR>`** SVG filter primitive defines the transfer function for the red component of the input graphic of its parent `<feComponentTransfer>` element.
+    /// The `<feFuncR>` SVG filter primitive defines the transfer function for the red component of the input graphic of its parent `<feComponentTransfer>` element.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feFuncR)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feFuncR)
     pub fn feFuncR;
 }
 
 __element! {
-    /// `<feGaussianBlur>`
+    /// Creates an SVG `<feGaussianBlur>` element.
     ///
-    /// The **`<feGaussianBlur>`** SVG filter primitive blurs the input image by the amount specified in , which defines the bell-curve.
+    /// The `<feGaussianBlur>` SVG filter primitive blurs the input image by the amount specified in , which defines the bell-curve.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feGaussianBlur)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feGaussianBlur)
     pub fn feGaussianBlur;
 }
 
 __element! {
-    /// `<feImage>`
+    /// Creates an SVG `<feImage>` element.
     ///
-    /// The **`<feImage>`** SVG filter primitive fetches image data from an external source and provides the pixel data as output (meaning if the external source…
+    /// The `<feImage>` SVG filter primitive loads image data from an external source for use in a filter.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feImage)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feImage)
     pub fn feImage;
 }
 
 __element! {
-    /// `<feMerge>`
+    /// Creates an SVG `<feMerge>` element.
     ///
-    /// The **`<feMerge>`** SVG element allows filter effects to be applied concurrently instead of sequentially.
+    /// The `<feMerge>` SVG element allows filter effects to be applied concurrently instead of sequentially.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feMerge)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feMerge)
     pub fn feMerge;
 }
 
 __element! {
-    /// `<feMergeNode>`
+    /// Creates an SVG `<feMergeNode>` element.
     ///
-    /// The **`<feMergeNode>`** SVG takes the result of another filter to be processed by its parent .
+    /// The `<feMergeNode>` SVG takes the result of another filter to be processed by its parent .
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feMergeNode)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feMergeNode)
     pub fn feMergeNode;
 }
 
 __element! {
-    /// `<feMorphology>`
+    /// Creates an SVG `<feMorphology>` element.
     ///
-    /// The **`<feMorphology>`** SVG filter primitive is used to erode or dilate the input image.
+    /// The `<feMorphology>` SVG filter primitive is used to erode or dilate the input image.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feMorphology)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feMorphology)
     pub fn feMorphology;
 }
 
 __element! {
-    /// `<feOffset>`
+    /// Creates an SVG `<feOffset>` element.
     ///
-    /// The **`<feOffset>`** SVG filter primitive enables offsetting an input image relative to its current position.
+    /// The `<feOffset>` SVG filter primitive enables offsetting an input image relative to its current position.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feOffset)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feOffset)
     pub fn feOffset;
 }
 
 __element! {
-    /// `<fePointLight>`
+    /// Creates an SVG `<fePointLight>` element.
     ///
-    /// The **`<fePointLight>`** SVG element defines a light source which allows you to create a point light effect.
+    /// The `<fePointLight>` SVG element defines a point light source for a lighting filter.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/fePointLight)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/fePointLight)
     pub fn fePointLight;
 }
 
 __element! {
-    /// `<feSpecularLighting>`
+    /// Creates an SVG `<feSpecularLighting>` element.
     ///
-    /// The **`<feSpecularLighting>`** SVG filter primitive lights a source graphic using the alpha channel as a bump map.
+    /// The `<feSpecularLighting>` SVG filter primitive lights a source graphic using the alpha channel as a bump map.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feSpecularLighting)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feSpecularLighting)
     pub fn feSpecularLighting;
 }
 
 __element! {
-    /// `<feSpotLight>`
+    /// Creates an SVG `<feSpotLight>` element.
     ///
-    /// The **`<feSpotLight>`** SVG element defines a light source that can be used to create a spotlight effect.
+    /// The `<feSpotLight>` SVG element defines a light source that can be used to create a spotlight effect.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feSpotLight)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feSpotLight)
     pub fn feSpotLight;
 }
 
 __element! {
-    /// `<feTile>`
+    /// Creates an SVG `<feTile>` element.
     ///
-    /// The **`<feTile>`** SVG filter primitive allows you to fill a target rectangle with a repeated, tiled pattern of an input image.
+    /// The `<feTile>` SVG filter primitive fills a target rectangle with a repeated tile of an input image.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feTile)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feTile)
     pub fn feTile;
 }
 
 __element! {
-    /// `<feTurbulence>`
+    /// Creates an SVG `<feTurbulence>` element.
     ///
-    /// The **`<feTurbulence>`** SVG filter primitive creates an image using the Perlin turbulence function.
+    /// The `<feTurbulence>` SVG filter primitive creates an image using the Perlin turbulence function.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feTurbulence)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feTurbulence)
     pub fn feTurbulence;
 }
 
 __element! {
-    /// `<filter>`
+    /// Creates an SVG `<filter>` element.
     ///
-    /// The **`<filter>`** SVG element defines a custom filter effect by grouping atomic filter primitives.
+    /// The `<filter>` SVG element defines a custom filter effect by grouping atomic filter primitives.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/filter)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/filter)
     pub fn filter;
 }
 
 __element! {
-    /// `<foreignObject>`
+    /// Creates an SVG `<foreignObject>` element.
     ///
-    /// The **`<foreignObject>`** SVG element includes elements from a different XML namespace.
+    /// The `<foreignObject>` SVG element includes elements from a different XML namespace.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/foreignObject)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/foreignObject)
     pub fn foreignObject;
 }
 
 __element! {
-    /// `<g>`
+    /// Creates an SVG `<g>` element.
     ///
-    /// The **`<g>`** SVG element is a container used to group other SVG elements.
+    /// The `<g>` SVG element is a container used to group other SVG elements.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/g)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/g)
     pub fn g;
 }
 
 __element! {
-    /// `<image>`
+    /// Creates an SVG `<image>` element.
     ///
-    /// The **`<image>`** SVG element includes images inside SVG documents.
+    /// The `<image>` SVG element includes images inside SVG documents.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/image)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/image)
     pub fn image;
 }
 
 __element! {
-    /// `<line>`
+    /// Creates an SVG `<line>` element.
     ///
-    /// The **`<line>`** SVG element is an SVG basic shape used to create a line connecting two points.
+    /// The `<line>` SVG element is an SVG basic shape used to create a line connecting two points.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/line)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/line)
     pub fn line;
 }
 
 __element! {
-    /// `<linearGradient>`
+    /// Creates an SVG `<linearGradient>` element.
     ///
-    /// The **`<linearGradient>`** SVG element lets authors define linear gradients to apply to other SVG elements.
+    /// The `<linearGradient>` SVG element lets authors define linear gradients to apply to other SVG elements.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/linearGradient)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/linearGradient)
     pub fn linearGradient;
 }
 
 __element! {
-    /// `<marker>`
+    /// Creates an SVG `<marker>` element.
     ///
-    /// The **`<marker>`** SVG element defines a graphic used for drawing arrowheads or polymarkers on a given `<path>`, `<line>`, `<polyline>` or `<polygon>` element.
+    /// The `<marker>` SVG element defines a graphic used for drawing arrowheads or polymarkers on a given `<path>`, `<line>`, `<polyline>` or `<polygon>` element.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/marker)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/marker)
     pub fn marker;
 }
 
 __element! {
-    /// `<mask>`
+    /// Creates an SVG `<mask>` element.
     ///
-    /// The **`<mask>`** SVG element defines a mask for compositing the current object into the background.
+    /// The `<mask>` SVG element defines a mask for compositing the current object into the background.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/mask)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/mask)
     pub fn mask;
 }
 
 __element! {
-    /// `<metadata>`
+    /// Creates an SVG `<metadata>` element.
     ///
-    /// The **`<metadata>`** SVG element adds metadata to SVG content.
+    /// The `<metadata>` SVG element adds metadata to SVG content.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/metadata)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/metadata)
     pub fn metadata;
 }
 
 __element! {
-    /// `<mpath>`
+    /// Creates an SVG `<mpath>` element.
     ///
-    /// The **`<mpath>`** SVG sub-element for the `<animateMotion>` element provides the ability to reference an external `<path>` element as the definition of a motion path.
+    /// The `<mpath>` SVG sub-element for the `<animateMotion>` element provides the ability to reference an external `<path>` element as the definition of a motion path.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/mpath)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/mpath)
     pub fn mpath;
 }
 
 __element! {
-    /// `<path>`
+    /// Creates an SVG `<path>` element.
     ///
-    /// The **`<path>`** SVG element is the generic element to define a shape.
+    /// The `<path>` SVG element is the generic element to define a shape.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/path)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/path)
     pub fn path;
 }
 
 __element! {
-    /// `<pattern>`
+    /// Creates an SVG `<pattern>` element.
     ///
-    /// The **`<pattern>`** SVG element defines a graphics object which can be redrawn at repeated x- and y-coordinate intervals ("tiled") to cover an area.
+    /// The `<pattern>` SVG element defines a graphics object which can be redrawn at repeated x- and y-coordinate intervals ("tiled") to cover an area.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/pattern)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/pattern)
     pub fn pattern;
 }
 
 __element! {
-    /// `<polygon>`
+    /// Creates an SVG `<polygon>` element.
     ///
-    /// The **`<polygon>`** SVG element defines a closed shape consisting of a set of connected straight line segments.
+    /// The `<polygon>` SVG element defines a closed shape consisting of a set of connected straight line segments.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/polygon)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/polygon)
     pub fn polygon;
 }
 
 __element! {
-    /// `<polyline>`
+    /// Creates an SVG `<polyline>` element.
     ///
-    /// The **`<polyline>`** SVG element is an SVG basic shape that creates straight lines connecting several points.
+    /// The `<polyline>` SVG element is an SVG basic shape that creates straight lines connecting several points.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/polyline)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/polyline)
     pub fn polyline;
 }
 
 __element! {
-    /// `<radialGradient>`
+    /// Creates an SVG `<radialGradient>` element.
     ///
-    /// The **`<radialGradient>`** SVG element lets authors define radial gradients that can be applied to fill or stroke of graphical elements.
+    /// The `<radialGradient>` SVG element lets authors define radial gradients that can be applied to fill or stroke of graphical elements.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/radialGradient)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/radialGradient)
     pub fn radialGradient;
 }
 
 __element! {
-    /// `<rect>`
+    /// Creates an SVG `<rect>` element.
     ///
-    /// The **`<rect>`** SVG element is a basic SVG shape that draws rectangles, defined by their position, width, and height.
+    /// The `<rect>` SVG element is a basic SVG shape that draws rectangles, defined by their position, width, and height.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/rect)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/rect)
     pub fn rect;
 }
 
 __element! {
-    /// `<set>`
+    /// Creates an SVG `<set>` element.
     ///
-    /// The **`<set>`** SVG element provides a method of setting the value of an attribute for a specified duration.
+    /// The `<set>` SVG element provides a method of setting the value of an attribute for a specified duration.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/set)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/set)
     pub fn set;
 }
 
 __element! {
-    /// `<stop>`
+    /// Creates an SVG `<stop>` element.
     ///
-    /// The **`<stop>`** SVG element defines a color and its position to use on a gradient.
+    /// The `<stop>` SVG element defines a color and its position to use on a gradient.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/stop)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/stop)
     pub fn stop;
 }
 
 __element! {
-    /// `<svg>`
+    /// Creates an SVG `<svg>` element.
     ///
-    /// The **`<svg>`** SVG element is a container that defines a new coordinate system and viewport.
+    /// The `<svg>` SVG element is a container that defines a new coordinate system and viewport.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/svg)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/svg)
     pub fn svg;
 }
 
 __element! {
-    /// `<switch>`
+    /// Creates an SVG `<switch>` element.
     ///
-    /// The **`<switch>`** SVG element evaluates any and attributes on its direct child elements in order, and then renders the first child where these attributes…
+    /// The `<switch>` SVG element renders the first child whose conditional processing attributes evaluate to true.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/switch)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/switch)
     pub fn switch;
 }
 
 __element! {
-    /// `<symbol>`
+    /// Creates an SVG `<symbol>` element.
     ///
-    /// The **`<symbol>`** SVG element is used to define graphical template objects which can be instantiated by a `<use>` element.
+    /// The `<symbol>` SVG element is used to define graphical template objects which can be instantiated by a `<use>` element.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/symbol)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/symbol)
     pub fn symbol;
 }
 
 __element! {
-    /// `<text>`
+    /// Creates an SVG `<text>` element.
     ///
-    /// The **`<text>`** SVG element draws a graphics element consisting of text.
+    /// The `<text>` SVG element draws a graphics element consisting of text.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/text)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/text)
     pub fn text;
 }
 
 __element! {
-    /// `<textPath>`
+    /// Creates an SVG `<textPath>` element.
     ///
-    /// The **`<textPath>`** SVG element is used to render text along the shape of a `<path>` element.
+    /// The `<textPath>` SVG element is used to render text along the shape of a `<path>` element.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/textPath)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/textPath)
     pub fn textPath;
 }
 
 __element! {
-    /// `<tspan>`
+    /// Creates an SVG `<tspan>` element.
     ///
-    /// The **`<tspan>`** SVG element defines a subtext within a element or another `<tspan>` element.
+    /// The `<tspan>` SVG element defines a subtext within a element or another `<tspan>` element.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/tspan)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/tspan)
     pub fn tspan;
 }
 
 __element! {
-    /// `<view>`
+    /// Creates an SVG `<view>` element.
     ///
-    /// The **`<view>`** SVG element defines a particular view of an SVG document.
+    /// The `<view>` SVG element defines a particular view of an SVG document.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/view)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/view)
     pub fn view;
 }
 
 __element! {
-    /// `<annotation>`
+    /// Creates a MathML `<annotation>` element.
     ///
-    /// The **`<annotation>`** MathML element contains an annotation to the MathML expression in a textual format, for example LaTeX.
+    /// The `<annotation>` MathML element contains an annotation to the MathML expression in a textual format, for example LaTeX.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/annotation)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/annotation)
     pub fn annotation;
 }
 
 __element! {
-    /// `<maction>`
+    /// Creates a MathML `<maction>` element.
     ///
-    /// The **`<maction>`** MathML element allows you to bind actions to mathematical expressions.
+    /// The `<maction>` MathML element binds actions to mathematical expressions.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/maction)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/maction)
     pub fn maction;
 }
 
 __element! {
-    /// `<math>`
+    /// Creates a MathML `<math>` element.
     ///
-    /// The **`<math>`** MathML element is the top-level MathML element, used to write a single mathematical formula.
+    /// The `<math>` MathML element is the top-level MathML element, used to write a single mathematical formula.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/math)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/math)
     pub fn math;
 }
 
 __element! {
-    /// `<menclose>`
+    /// Creates a MathML `<menclose>` element.
     ///
-    /// The **`<menclose>`** MathML element renders its content inside an enclosing notation specified by the `notation` attribute.
+    /// The `<menclose>` MathML element renders its content inside an enclosing notation specified by the `notation` attribute.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/menclose)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/menclose)
     pub fn menclose;
 }
 
 __element! {
-    /// `<merror>`
+    /// Creates a MathML `<merror>` element.
     ///
-    /// The **`<merror>`** MathML element is used to display contents as error messages.
+    /// The `<merror>` MathML element is used to display contents as error messages.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/merror)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/merror)
     pub fn merror;
 }
 
 __element! {
-    /// `<mfenced>`
+    /// Creates a MathML `<mfenced>` element.
     ///
-    /// The **`<mfenced>`** MathML element provides the possibility to add custom opening and closing brackets (such as parentheses) and separators (such as commas or semicolons)…
+    /// The `<mfenced>` MathML element adds configurable fences and separators around its content.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/mfenced)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/mfenced)
     pub fn mfenced;
 }
 
 __element! {
-    /// `<mfrac>`
+    /// Creates a MathML `<mfrac>` element.
     ///
-    /// The **`<mfrac>`** MathML element is used to display fractions.
+    /// The `<mfrac>` MathML element is used to display fractions.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/mfrac)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/mfrac)
     pub fn mfrac;
 }
 
 __element! {
-    /// `<mi>`
+    /// Creates a MathML `<mi>` element.
     ///
-    /// The **`<mi>`** MathML element indicates that the content should be rendered as an **identifier**, such as a function name, variable or symbolic constant.
+    /// The `<mi>` MathML element represents an identifier such as a function name, variable, or symbolic constant.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/mi)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/mi)
     pub fn mi;
 }
 
 __element! {
-    /// `<mmultiscripts>`
+    /// Creates a MathML `<mmultiscripts>` element.
     ///
-    /// The **`<mmultiscripts>`** MathML element is used to attach an arbitrary number of subscripts and superscripts to an expression at once, generalizing the element.
+    /// The `<mmultiscripts>` MathML element attaches multiple prescripts and postscripts to an expression.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/mmultiscripts)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/mmultiscripts)
     pub fn mmultiscripts;
 }
 
 __element! {
-    /// `<mn>`
+    /// Creates a MathML `<mn>` element.
     ///
-    /// The **`<mn>`** MathML element represents a **numeric** literal which is normally a sequence of digits with a possible separator (a dot or a comma).
+    /// The `<mn>` MathML element represents a numeric literal.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/mn)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/mn)
     pub fn mn;
 }
 
 __element! {
-    /// `<mo>`
+    /// Creates a MathML `<mo>` element.
     ///
-    /// The **`<mo>`** MathML element represents an **operator** in a broad sense.
+    /// The `<mo>` MathML element represents a mathematical operator.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/mo)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/mo)
     pub fn mo;
 }
 
 __element! {
-    /// `<mover>`
+    /// Creates a MathML `<mover>` element.
     ///
-    /// The **`<mover>`** MathML element is used to attach an accent or a limit over an expression.
+    /// The `<mover>` MathML element is used to attach an accent or a limit over an expression.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/mover)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/mover)
     pub fn mover;
 }
 
 __element! {
-    /// `<mpadded>`
+    /// Creates a MathML `<mpadded>` element.
     ///
-    /// The **`<mpadded>`** MathML element is used to add extra padding and to set the general adjustment of position and size of enclosed contents.
+    /// The `<mpadded>` MathML element is used to add extra padding and to set the general adjustment of position and size of enclosed contents.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/mpadded)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/mpadded)
     pub fn mpadded;
 }
 
 __element! {
-    /// `<mphantom>`
+    /// Creates a MathML `<mphantom>` element.
     ///
-    /// The **`<mphantom>`** MathML element is rendered invisibly, but dimensions (such as height, width, and baseline position) are still kept.
+    /// The `<mphantom>` MathML element is rendered invisibly, but dimensions (such as height, width, and baseline position) are still kept.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/mphantom)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/mphantom)
     pub fn mphantom;
 }
 
 __element! {
-    /// `<mprescripts>`
+    /// Creates a MathML `<mprescripts>` element.
     ///
-    /// The **`<mprescripts>`** MathML element is used within an element to indicate the start of the pre-scripts elements (subscripts and superscripts that are placed **before**…
+    /// The `<mprescripts>` MathML element marks the beginning of prescripts inside `<mmultiscripts>`.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/mprescripts)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/mprescripts)
     pub fn mprescripts;
 }
 
 __element! {
-    /// `<mroot>`
+    /// Creates a MathML `<mroot>` element.
     ///
-    /// The **`<mroot>`** MathML element is used to display roots with an explicit index.
+    /// The `<mroot>` MathML element is used to display roots with an explicit index.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/mroot)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/mroot)
     pub fn mroot;
 }
 
 __element! {
-    /// `<mrow>`
+    /// Creates a MathML `<mrow>` element.
     ///
-    /// The **`<mrow>`** MathML element is used to group sub-expressions, which usually contain one or more operators with their respective operands (such as and ).
+    /// The `<mrow>` MathML element groups one or more mathematical subexpressions.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/mrow)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/mrow)
     pub fn mrow;
 }
 
 __element! {
-    /// `<ms>`
+    /// Creates a MathML `<ms>` element.
     ///
-    /// The **`<ms>`** MathML element represents a **string** literal meant to be interpreted by programming languages and computer algebra systems.
+    /// The `<ms>` MathML element represents a string literal for programming languages and computer algebra systems.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/ms)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/ms)
     pub fn ms;
 }
 
 __element! {
-    /// `<mspace>`
+    /// Creates a MathML `<mspace>` element.
     ///
-    /// The **`<mspace>`** MathML element is used to display a blank space, whose size is set by its attributes.
+    /// The `<mspace>` MathML element is used to display a blank space, whose size is set by its attributes.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/mspace)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/mspace)
     pub fn mspace;
 }
 
 __element! {
-    /// `<msqrt>`
+    /// Creates a MathML `<msqrt>` element.
     ///
-    /// The **`<msqrt>`** MathML element is used to display square roots (no index is displayed).
+    /// The `<msqrt>` MathML element is used to display square roots (no index is displayed).
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/msqrt)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/msqrt)
     pub fn msqrt;
 }
 
 __element! {
-    /// `<mstyle>`
+    /// Creates a MathML `<mstyle>` element.
     ///
-    /// The **`<mstyle>`** MathML element is used to change the style of its children.
+    /// The `<mstyle>` MathML element is used to change the style of its children.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/mstyle)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/mstyle)
     pub fn mstyle;
 }
 
 __element! {
-    /// `<msub>`
+    /// Creates a MathML `<msub>` element.
     ///
-    /// The **`<msub>`** MathML element is used to attach a subscript to an expression.
+    /// The `<msub>` MathML element is used to attach a subscript to an expression.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/msub)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/msub)
     pub fn msub;
 }
 
 __element! {
-    /// `<msubsup>`
+    /// Creates a MathML `<msubsup>` element.
     ///
-    /// The **`<msubsup>`** MathML element is used to attach both a subscript and a superscript, together, to an expression.
+    /// The `<msubsup>` MathML element is used to attach both a subscript and a superscript, together, to an expression.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/msubsup)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/msubsup)
     pub fn msubsup;
 }
 
 __element! {
-    /// `<msup>`
+    /// Creates a MathML `<msup>` element.
     ///
-    /// The **`<msup>`** MathML element is used to attach a superscript to an expression.
+    /// The `<msup>` MathML element is used to attach a superscript to an expression.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/msup)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/msup)
     pub fn msup;
 }
 
 __element! {
-    /// `<mtable>`
+    /// Creates a MathML `<mtable>` element.
     ///
-    /// The **`<mtable>`** MathML element allows you to create tables or matrices.
+    /// The `<mtable>` MathML element represents a table or matrix.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/mtable)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/mtable)
     pub fn mtable;
 }
 
 __element! {
-    /// `<mtd>`
+    /// Creates a MathML `<mtd>` element.
     ///
-    /// The **`<mtd>`** MathML element represents a cell in a table or a matrix.
+    /// The `<mtd>` MathML element represents a cell in a table or a matrix.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/mtd)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/mtd)
     pub fn mtd;
 }
 
 __element! {
-    /// `<mtext>`
+    /// Creates a MathML `<mtext>` element.
     ///
-    /// The **`<mtext>`** MathML element is used to render arbitrary text with _no_ notational meaning, such as comments or annotations.
+    /// The `<mtext>` MathML element is used to render arbitrary text with _no_ notational meaning, such as comments or annotations.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/mtext)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/mtext)
     pub fn mtext;
 }
 
 __element! {
-    /// `<mtr>`
+    /// Creates a MathML `<mtr>` element.
     ///
-    /// The **`<mtr>`** MathML element represents a row in a table or a matrix.
+    /// The `<mtr>` MathML element represents a row in a table or a matrix.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/mtr)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/mtr)
     pub fn mtr;
 }
 
 __element! {
-    /// `<munder>`
+    /// Creates a MathML `<munder>` element.
     ///
-    /// The **`<munder>`** MathML element is used to attach an accent or a limit under an expression.
+    /// The `<munder>` MathML element is used to attach an accent or a limit under an expression.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/munder)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/munder)
     pub fn munder;
 }
 
 __element! {
-    /// `<munderover>`
+    /// Creates a MathML `<munderover>` element.
     ///
-    /// The **`<munderover>`** MathML element is used to attach accents or limits both under and over an expression.
+    /// The `<munderover>` MathML element is used to attach accents or limits both under and over an expression.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/munderover)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/munderover)
     pub fn munderover;
 }
 
 __element! {
-    /// `<semantics>`
+    /// Creates a MathML `<semantics>` element.
     ///
-    /// The **`<semantics>`** MathML element associates annotations with a MathML expression, for example its text source as a lightweight markup language or mathematical meaning expressed…
+    /// The `<semantics>` MathML element associates a mathematical expression with annotations such as source notation or semantic metadata.
     ///
-    /// [MDN reference](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/semantics)
+    /// [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/semantics)
     pub fn semantics;
 }

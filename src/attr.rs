@@ -4,6 +4,10 @@ mod sealed {
     pub trait SegmentKind {}
 }
 
+type Kind<Name, Value> = <<Chain<Name, Value> as Html>::Segments<End> as Segments>::Kind;
+
+type GroupKind<T> = <<T as Html>::Segments<crate::html::End> as Segments>::Kind;
+
 #[doc(hidden)]
 pub trait SegmentKind: sealed::SegmentKind {
     type PrependStatic: SegmentKind;
@@ -44,14 +48,11 @@ pub trait SegmentKind: sealed::SegmentKind {
     ) -> Self::JoinClassAfterDynamic<L, R, T>;
 }
 
-/// One HTML attribute name and value pair.
+/// An HTML attribute name and value pair.
 ///
-/// The attribute is omitted when its value reports that it is not present.
-#[allow(missing_docs)]
+/// The complete attribute is omitted when the value is not present.
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Attr<Name, Value>(pub Name, pub Value);
-
-type Kind<Name, Value> = <<Chain<Name, Value> as Html>::Segments<End> as Segments>::Kind;
 
 impl<Name, Value> Html for Attr<Name, Value>
 where
@@ -83,8 +84,8 @@ where
     }
 }
 
-#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[doc(hidden)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct EmptySegments;
 
 impl sealed::SegmentKind for EmptySegments {}
@@ -144,8 +145,8 @@ impl SegmentKind for EmptySegments {
     }
 }
 
-#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[doc(hidden)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct StaticSegments;
 
 impl sealed::SegmentKind for StaticSegments {}
@@ -217,8 +218,8 @@ impl SegmentKind for StaticSegments {
     }
 }
 
-#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[doc(hidden)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct DynamicSegments;
 
 impl sealed::SegmentKind for DynamicSegments {}
@@ -278,10 +279,11 @@ impl SegmentKind for DynamicSegments {
     }
 }
 
-/// A collection of HTML attributes.
+/// A collection of HTML attributes that can be rendered or projected.
 ///
-/// Class and style values are tracked separately so multiple sources can be
-/// merged into one final attribute without duplicates.
+/// Class and style values are kept separate from ordinary attributes so that
+/// projected collections can merge them into one `class` and one `style`
+/// attribute. Ordinary attributes retain their original order and may repeat.
 pub trait Attributes: Html {
     #[doc(hidden)]
     type Class: Html;
@@ -307,8 +309,8 @@ impl Attributes for () {
     }
 }
 
-#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[doc(hidden)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct AttributeSet<C, S, O> {
     pub class: C,
     pub style: S,
@@ -349,8 +351,8 @@ where
     }
 }
 
-#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[doc(hidden)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Class<T>(pub T);
 
 impl<V> Html for Class<V>
@@ -368,10 +370,8 @@ where
     }
 }
 
-type GroupKind<T> = <<T as Html>::Segments<crate::html::End> as Segments>::Kind;
-
-#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[doc(hidden)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct ClassChain<L, R>(pub L, pub R);
 
 impl<L, R> Html for ClassChain<L, R>
@@ -416,8 +416,8 @@ where
     }
 }
 
-#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[doc(hidden)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Style<T>(pub T);
 
 impl<V> Html for Style<V>
@@ -435,8 +435,8 @@ where
     }
 }
 
-#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[doc(hidden)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct StyleValue<V>(pub V);
 
 impl<V> Html for StyleValue<V>
@@ -464,9 +464,39 @@ where
     fn write(self, s: &mut String) {
         if self.0.is_present() {
             Html::write(self.0, s);
-            s.push_str(";");
+            s.push(';');
         }
     }
+}
+
+#[macro_export]
+#[doc(hidden)]
+macro_rules! __attrs {
+    ($props:expr, { $(.$name:ident: $value:tt),* $(,)? }) => {{
+        #[allow(unused_mut)]
+        let mut props = $props;
+
+        let attrs = $crate::Omitted;
+
+        $crate::__attrs_expand!(props, attrs, $(.$name: $value),*);
+
+        ($crate::Props(props), $crate::Attrs(attrs))
+    }};
+
+    ($props:expr, { $($tokens:tt)* }) => {{
+        #[allow(unused_mut)]
+        let mut props = $props;
+
+        let attrs = $crate::AttributeSet {
+            class: (),
+            style: (),
+            other: (),
+        };
+
+        $crate::__attrs_expand!(props, attrs, $($tokens)*);
+
+        ($crate::Props(props), $crate::Attrs(attrs))
+    }};
 }
 
 #[macro_export]
@@ -599,23 +629,4 @@ macro_rules! __attrs_expand {
 
         $crate::__attrs_expand!($props, $attrs, $($($rest)*)?);
     };
-}
-
-#[macro_export]
-#[doc(hidden)]
-macro_rules! __attrs {
-    ($props:expr, { $($tokens:tt)* }) => {{
-        #[allow(unused_mut)]
-        let mut props = $props;
-
-        let attrs = $crate::AttributeSet {
-            class: (),
-            style: (),
-            other: (),
-        };
-
-        $crate::__attrs_expand!(props, attrs, $($tokens)*);
-
-        ($crate::Props(props), $crate::Attrs(attrs))
-    }};
 }

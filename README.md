@@ -12,11 +12,14 @@ Rust-native HTML templates with compile-time optimization.
 
 </div>
 
-Avosetta represents HTML as composable Rust values. Consecutive static
-fragments are concatenated at compile time, while injected values and control
-flow write directly into the same output buffer.
+Avosetta turns ASX markup into ordinary Rust values that implement `Html`.
+Static markup is joined at compile time, while dynamic expressions and control
+flow write directly into a single output buffer.
 
-The `asx!` macro is the primary entry point:
+Text and attribute values are escaped by default. Use `Raw` only when the input
+is already trusted HTML.
+
+## Quick start
 
 ```rust
 use avosetta::{Html, asx};
@@ -41,8 +44,8 @@ assert_eq!(
 cargo add avosetta
 ```
 
-The complete ASX syntax reference and public API documentation are available on
-[docs.rs](https://docs.rs/avosetta).
+See the [`asx!` syntax guide](https://docs.rs/avosetta/latest/avosetta/macro.asx.html)
+for the complete language reference.
 
 ## License
 

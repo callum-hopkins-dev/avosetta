@@ -7,9 +7,11 @@ mod sealed {
 
     pub trait StaticText {}
 }
+
 #[doc(hidden)]
 pub trait StaticText: sealed::StaticText + Copy {
     const LEN: usize;
+
     #[inline(always)]
     fn as_str(&self) -> &str {
         let ptr = ::core::ptr::from_ref(self).cast::<u8>();
@@ -23,10 +25,12 @@ pub trait StaticText: sealed::StaticText + Copy {
         unsafe { ::core::str::from_utf8_unchecked(bytes) }
     }
 }
+
 #[doc(hidden)]
 pub trait DynamicWrite: Sized {
     fn write(self, s: &mut String);
 }
+
 #[doc(hidden)]
 pub trait Segments: sealed::Segments + Sized {
     type Kind: SegmentKind;
@@ -37,10 +41,10 @@ pub trait Segments: sealed::Segments + Sized {
     fn write(self, s: &mut String);
 }
 
-/// A value that can render itself as HTML.
+/// A value that can be rendered as HTML.
 ///
-/// Implementations are consumed when written, allowing templates and captured
-/// values to be moved directly into the rendering pipeline.
+/// Rendering consumes the value, allowing captured data to move directly into
+/// the output pipeline without an intermediate tree.
 pub trait Html: Sized {
     #[doc(hidden)]
     type Segments<T: Segments>: Segments;
@@ -54,13 +58,13 @@ pub trait Html: Sized {
         true
     }
 
-    /// Appends this HTML value to an existing string.
+    /// Renders this value at the end of an existing string.
     #[inline(always)]
     fn write(self, s: &mut String) {
         self.segments(End).write(s);
     }
 
-    /// Renders this HTML value into a newly allocated string.
+    /// Renders this value into a new string.
     #[inline(always)]
     fn to_string(self) -> String {
         let mut s = String::new();
@@ -83,8 +87,8 @@ impl Html for () {
     }
 }
 
-#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[doc(hidden)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct End;
 
 impl sealed::Segments for End {}
@@ -109,8 +113,8 @@ impl Segments for End {
     fn write(self, _s: &mut String) {}
 }
 
-#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[doc(hidden)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Static<S, T>(pub S, pub T);
 
 impl<S, T> sealed::Segments for Static<S, T>
@@ -147,8 +151,8 @@ where
     }
 }
 
-#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[doc(hidden)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Dynamic<D, T>(pub D, pub T);
 
 impl<D, T> sealed::Segments for Dynamic<D, T>
@@ -185,17 +189,17 @@ where
     }
 }
 
-/// A fixed-size, UTF-8-validated static text fragment.
+/// A fixed-size fragment of valid UTF-8 known at compile time.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[repr(transparent)]
 pub struct Text<const N: usize>([u8; N]);
 
 impl<const N: usize> Text<N> {
-    /// Creates static text from an unchecked UTF-8 byte array.
+    /// Creates static text without validating its bytes.
     ///
     /// # Safety
     ///
-    /// bytes must contain valid UTF-8.
+    /// `bytes` must contain valid UTF-8.
     #[inline(always)]
     pub const unsafe fn new(bytes: [u8; N]) -> Self {
         Self(bytes)
@@ -217,9 +221,9 @@ impl<const N: usize> Html for Text<N> {
     }
 }
 
+#[doc(hidden)]
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[repr(C)]
-#[doc(hidden)]
 pub struct Concat<T0, T1>(pub T0, pub T1);
 
 impl<T0, T1> sealed::StaticText for Concat<T0, T1>
@@ -237,8 +241,7 @@ where
     const LEN: usize = T0::LEN + T1::LEN;
 }
 
-/// Two adjacent HTML values rendered in order.
-#[allow(missing_docs)]
+/// Two HTML values rendered consecutively.
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Chain<T0, T1>(pub T0, pub T1);
 
@@ -260,8 +263,8 @@ where
     }
 }
 
-#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[doc(hidden)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct FnHtml<F, H>(pub F, pub PhantomData<H>);
 
 impl<F, H> Html for FnHtml<F, H>
@@ -277,8 +280,8 @@ where
     }
 }
 
-#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[doc(hidden)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct WriteHtml<F>(pub F);
 
 impl<F> Html for WriteHtml<F>
@@ -335,19 +338,18 @@ impl ::core::fmt::Write for EscapeWriter<'_> {
     }
 }
 
-/// Trusted text that is rendered without HTML escaping.
+/// A trusted string rendered without HTML escaping.
 ///
-/// Only wrap content that is already valid, trusted HTML. Untrusted input can
-/// otherwise inject markup into the rendered document.
+/// Use this wrapper only for content that is already valid, trusted HTML.
+/// Wrapping untrusted input can introduce markup into the document.
 ///
-/// # Examples
+/// # Example
 ///
 /// ```
 /// use avosetta::{Html, Raw};
 ///
 /// assert_eq!(Raw("<strong>trusted</strong>").to_string(), "<strong>trusted</strong>");
 /// ```
-#[allow(missing_docs)]
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[repr(transparent)]
 pub struct Raw<T>(pub T);
