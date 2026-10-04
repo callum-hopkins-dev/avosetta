@@ -480,7 +480,7 @@ macro_rules! __attrs {
 
         $crate::__attrs_expand!(props, attrs, $(.$name: $value),*);
 
-        ($crate::Props(props), $crate::Attrs(attrs))
+        (props, attrs)
     }};
 
     ($props:expr, { $($tokens:tt)* }) => {{
@@ -495,7 +495,7 @@ macro_rules! __attrs {
 
         $crate::__attrs_expand!(props, attrs, $($tokens)*);
 
-        ($crate::Props(props), $crate::Attrs(attrs))
+        (props, attrs)
     }};
 }
 
@@ -515,7 +515,7 @@ macro_rules! __attrs_expand {
     };
 
     ($props:ident, $attrs:ident, ..$value:expr) => {
-        let (class, style, other) = $crate::Attributes::into_parts($value.0);
+        let (class, style, other) = $crate::Attributes::into_parts($value);
 
         let $attrs = $crate::AttributeSet {
             class: $crate::ClassChain($attrs.class, class),

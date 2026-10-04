@@ -201,8 +201,10 @@
 ///
 /// ## Attribute projection
 ///
-/// Use `..attrs` to project an [`Attrs`](crate::Attrs) value into an element or
-/// fragment. A projection must be the final entry in the list:
+/// Use `..attrs` to project any value implementing
+/// [`Attributes`](crate::Attributes) into an element or fragment. A projection
+/// must be the final entry in the list. When forwarding an [`Attrs`](crate::Attrs)
+/// fragment parameter, unwrap it before projection.
 ///
 /// ```rust
 /// # #[cfg(any())]
@@ -581,7 +583,7 @@ macro_rules! __asx_expand {
             $crate::elements::Element {
                 name: $crate::__static_text!(@raw $element),
 
-                attrs: $crate::__attrs!((), { $($attrs)* }).1.0,
+                attrs: $crate::__attrs!((), { $($attrs)* }).1,
                 children: $crate::__asx_expand! { $($body)* }
             },
             $crate::__asx_expand!($($rest)*),
@@ -608,7 +610,7 @@ macro_rules! __asx_expand {
         $crate::Chain(
             $crate::elements::Void {
                 name: $crate::__static_text!(@raw $element),
-                attrs: $crate::__attrs!((), { $($attrs)* }).1.0,
+                attrs: $crate::__attrs!((), { $($attrs)* }).1,
             },
             $crate::__asx_expand!($($rest)*),
         )
@@ -649,8 +651,8 @@ macro_rules! __asx_expand {
                 $crate::Fragment::html(
                     fragment,
                     $crate::Context {
-                        attrs: attrs.0,
-                        props: props.0,
+                        attrs,
+                        props,
                         children: $crate::__asx_expand! { $($body)* },
                     },
                 )
@@ -676,8 +678,8 @@ macro_rules! __asx_expand {
                 $crate::Fragment::html(
                     fragment,
                     $crate::Context {
-                        attrs: attrs.0,
-                        props: props.0,
+                        attrs,
+                        props,
                         children: $crate::Omitted,
                     },
                 )
@@ -700,8 +702,8 @@ macro_rules! __asx_expand {
                 $crate::Fragment::html(
                     fragment,
                     $crate::Context {
-                        attrs: attrs.0,
-                        props: props.0,
+                        attrs,
+                        props,
                         children: $crate::__asx_expand! { $($body)* },
                     },
                 )
@@ -732,8 +734,8 @@ macro_rules! __asx_expand {
                 $crate::Fragment::html(
                     fragment,
                     $crate::Context {
-                        attrs: attrs.0,
-                        props: props.0,
+                        attrs,
+                        props,
                         children: $crate::Omitted,
                     },
                 )

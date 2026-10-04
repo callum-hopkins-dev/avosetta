@@ -2,17 +2,23 @@ use std::marker::PhantomData;
 
 use crate::{Attributes, Html};
 
-/// User-defined properties passed to a fragment function.
+/// Marks a fragment function parameter as user-defined properties.
+///
+/// Fragment functions must unwrap this marker before using its value.
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[repr(transparent)]
 pub struct Props<T>(pub T);
 
-/// HTML attributes passed to a fragment function.
+/// Marks a fragment function parameter as HTML attributes.
+///
+/// Fragment functions must unwrap this marker before using its value.
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[repr(transparent)]
 pub struct Attrs<T>(pub T);
 
-/// Child markup passed to a fragment function.
+/// Marks a fragment function parameter as child markup.
+///
+/// Fragment functions must unwrap this marker before using its value.
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[repr(transparent)]
 pub struct Children<T>(pub T);

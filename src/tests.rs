@@ -291,6 +291,7 @@ mod components {
         C: Html,
     {
         let component_label = props.0.label;
+        let attrs = attrs.0;
         let children = children.0;
 
         asx! {
