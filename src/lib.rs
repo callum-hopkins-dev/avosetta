@@ -37,14 +37,14 @@ mod syntax;
 pub mod elements;
 
 pub use attr::{Attr, Attributes};
-pub use fragment::{Attrs, Children, Context, Fragment, Props};
+pub use fragment::{Attrs, Children, Context, Fragment, Omitted, Props};
 pub use html::{Chain, Html, Raw, Text};
 
 #[doc(hidden)]
 pub use attr::{AttributeSet, Class, ClassChain, Style, StyleValue};
 
 #[doc(hidden)]
-pub use fragment::{FnFragment, Omitted};
+pub use fragment::FnFragment;
 
 #[doc(hidden)]
 pub use html::{FnHtml, WriteHtml};
