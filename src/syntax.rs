@@ -1,11 +1,13 @@
-/// Creates a lazily rendered HTML value from ASX syntax.
+/// Builds a lazy [`Html`](crate::Html) value from ASX markup.
 ///
-/// ASX builds lazy [`Html`](crate::Html) values from element calls, component
-/// calls, text, attributes, expressions, and Rust-like control flow.
+/// ASX combines HTML-like element syntax with ordinary Rust expressions and
+/// control flow. The resulting value is not rendered until it is written with
+/// [`Html::write`](crate::Html::write) or
+/// [`Html::to_string`](crate::Html::to_string).
 ///
-/// # A small example
+/// # Quick start
 ///
-/// Elements use braces for children and square brackets for attributes:
+/// Use braces for children and square brackets for attributes:
 ///
 /// ```rust
 /// # #[cfg(any())]
@@ -17,19 +19,22 @@
 /// # }
 /// ```
 ///
-/// Built-in HTML, SVG, and MathML elements are available by name. A qualified
-/// path calls a component function instead:
+/// Unprefixed names resolve through [`elements`](crate::elements), so local
+/// bindings cannot shadow built-in HTML, SVG, or MathML elements. Prefix a
+/// path with `@` to call a fragment function:
 ///
 /// ```rust
 /// # #[cfg(any())]
 /// # asx! {
-/// main { ui::ProfileCard { "Profile content" } }
+/// main {
+///     @ui::ProfileCard { "Profile content" }
+/// }
 /// # }
 /// ```
 ///
-/// # Elements with and without children
+/// # Elements
 ///
-/// These four shapes are available for element and component paths:
+/// Elements and `@`-prefixed fragment paths support the same four basic forms:
 ///
 /// ```rust
 /// # #[cfg(any())]
@@ -41,12 +46,18 @@
 /// # }
 /// ```
 ///
-/// A semicolon means that no children are supplied. The called element still
-/// decides how that is rendered: `br;` renders `<br>`, while `div;` renders an
-/// ordinary element with an empty body.
+/// Braces supply a body. A semicolon omits it. Ordinary elements render an
+/// empty body when none is supplied, while void elements reject braces at
+/// compile time, even when the body is empty:
 ///
-/// String-literal element names support custom elements without requiring a
-/// predefined function:
+/// ```compile_fail
+/// use avosetta::asx;
+///
+/// let _ = asx! { br {} };
+/// ```
+///
+/// Use a string literal as the element name for custom or otherwise unknown
+/// elements:
 ///
 /// ```rust
 /// # #[cfg(any())]
@@ -56,13 +67,13 @@
 /// # }
 /// ```
 ///
-/// A string literal followed immediately by `{`, `[`, or `;` is an element
-/// name. A literal in any other child position is text.
+/// A string literal followed by `{`, `[`, or `;` is parsed as an element name.
+/// In every other child position, it is parsed as text.
 ///
-/// # Text and expression injection
+/// # Text and expressions
 ///
-/// Bare literals are escaped and emitted as compile-time static text. Adjacent
-/// static literals and markup can be combined by the HTML representation:
+/// Bare literals become escaped static text. Adjacent static regions can be
+/// joined at compile time:
 ///
 /// ```rust
 /// # #[cfg(any())]
@@ -73,19 +84,23 @@
 /// # }
 /// ```
 ///
-/// Use `@(...)` or `@{...}` to inject a Rust expression implementing
-/// [`Html`](crate::Html):
+/// Inject a Rust expression that implements [`Html`](crate::Html) with
+/// `@(...)`. Use `@{...}` for a Rust block, including local statements:
 ///
 /// ```rust
 /// # #[cfg(any())]
 /// # asx! {
 /// "Hello, "
-/// @{user.name}
-/// @(format_args!("You have {} messages.", count))
+/// @(user.name)
+/// @{
+///     let count = messages.len();
+///     format!("You have {count} messages.")
+/// }
 /// # }
 /// ```
 ///
-/// A single literal inside `@{...}` is treated as static text too:
+/// A block returns its final expression in the usual Rust manner. A single
+/// literal inside `@{...}` remains static:
 ///
 /// ```rust
 /// # #[cfg(any())]
@@ -95,13 +110,13 @@
 /// # }
 /// ```
 ///
-/// Other expressions remain lazy. They are evaluated when the resulting HTML
-/// value is written, so they may move or capture values from the local scope.
+/// Other expressions stay lazy and are evaluated only when the final HTML
+/// value is rendered. They may therefore move or capture local values.
 ///
-/// # Attribute names and values
+/// # Attributes
 ///
-/// Identifier names cover normal attributes. Quoted names cover attributes
-/// that are not Rust identifiers:
+/// Write ordinary Rust identifiers directly. Put names that are not valid Rust
+/// identifiers in braces as string literals:
 ///
 /// ```rust
 /// # #[cfg(any())]
@@ -114,7 +129,7 @@
 /// # }
 /// ```
 ///
-/// String literals are static attribute values. Wrap other values and general
+/// String literals are static attribute values. Wrap dynamic values and other
 /// Rust expressions in braces:
 ///
 /// ```rust
@@ -128,8 +143,8 @@
 /// # }
 /// ```
 ///
-/// Attribute values that report themselves as absent omit the complete
-/// name/value pair. This is useful with `Option`, `false`, and `()`:
+/// A value that is not present omits the complete name-value pair. In
+/// particular, `None`, `false`, and `()` are absent:
 ///
 /// ```rust
 /// # #[cfg(any())]
@@ -142,14 +157,13 @@
 /// # }
 /// ```
 ///
-/// The example above emits `value`, but omits both `title` and `disabled`.
+/// This emits `value` and omits both `title` and `disabled`.
 ///
-/// # Class and style merging
+/// ## Class and style
 ///
-/// `class` and `style` are special accumulators. Every class source is merged
-/// into one attribute with a single space between present values. Every style
-/// source is merged into one attribute, and each present declaration receives
-/// a trailing semicolon:
+/// Repeated `class` values are merged into one attribute, with one space
+/// between each present value. Repeated `style` values are also merged, and
+/// every present declaration receives a trailing semicolon:
 ///
 /// ```rust
 /// # #[cfg(any())]
@@ -164,18 +178,19 @@
 /// # }
 /// ```
 ///
-/// With `size_class = "large"`, `is_selected = true`, and
-/// `color_style = "color: red"`, this produces one `class` and one `style`
-/// attribute: `<div class="card large selected"
-/// style="display: block;color: red;"></div>`.
+/// If `size_class` is `"large"`, `is_selected` is `true`, and `color_style`
+/// is `"color: red"`, the result contains:
 ///
-/// Class and style values that report themselves as absent contribute nothing,
-/// including their separator. The final class and style attributes are emitted
-/// before ordinary attributes, regardless of where their inputs appeared in
-/// the source list.
+/// ```text
+/// class="card large selected" style="display: block;color: red;"
+/// ```
 ///
-/// Other attributes are deliberately not deduplicated or merged. Repeating an
-/// ordinary attribute emits it repeatedly and preserves its relative order:
+/// Absent class and style values contribute neither content nor separators.
+/// The final `class` and `style` attributes are written before ordinary
+/// attributes, regardless of their source order.
+///
+/// Ordinary attributes are not merged or deduplicated. Repetition is preserved
+/// in source order:
 ///
 /// ```rust
 /// # #[cfg(any())]
@@ -184,13 +199,10 @@
 /// # }
 /// ```
 ///
-/// This produces both `id` attributes and both `data-tag` attributes. Avosetta
-/// does not choose a winner for ordinary attributes.
+/// ## Attribute projection
 ///
-/// # Attribute projection
-///
-/// `..attrs` projects an [`Attrs`](crate::Attrs) value into another element or
-/// component. Projection must be the final entry in an attribute list:
+/// Use `..attrs` to project an [`Attrs`](crate::Attrs) value into an element or
+/// fragment. A projection must be the final entry in the list:
 ///
 /// ```rust
 /// # #[cfg(any())]
@@ -201,34 +213,23 @@
 /// # }
 /// ```
 ///
-/// Projected classes join the existing class accumulator. Projected styles join
-/// the existing style accumulator. Projected ordinary attributes are appended
-/// and remain duplicated if the destination already contains the same name.
-/// This makes forwarding transparent rather than giving projected or local
-/// attributes implicit precedence.
+/// Projected classes and styles join the local accumulators. Projected ordinary
+/// attributes are appended and remain duplicated when the destination already
+/// contains the same name. Neither source receives implicit precedence.
 ///
-/// A component that accepts [`Attrs`](crate::Attrs) can therefore forward them
-/// while adding its own class or style:
+/// # Fragment functions
 ///
-/// ```rust
-/// # #[cfg(any())]
-/// # asx! {
-/// ui::Panel[class: "raised", id: "settings"] {
-///     "Settings"
-/// }
-/// # }
-/// ```
+/// An `@`-prefixed path calls an ordinary Rust function. Its parameters may
+/// use any supported combination and order of [`Props`](crate::Props),
+/// [`Attrs`](crate::Attrs), and [`Children`](crate::Children).
 ///
-/// # Component properties
-///
-/// A dot-prefixed name initializes a field on the component properties value.
-/// Properties begin with `Default::default()`, then each supplied field is
-/// assigned in source order:
+/// Dot-prefixed entries initialize fields on the value inside `Props`. That
+/// value starts at `Default::default()`, and assignments occur in source order:
 ///
 /// ```rust
 /// # #[cfg(any())]
 /// # asx! {
-/// ui::Button[
+/// @ui::Button[
 ///     .kind: {Kind::Primary},
 ///     .disabled: false,
 ///     id: "save"
@@ -236,21 +237,40 @@
 /// # }
 /// ```
 ///
-/// Property literals may be written directly. General property expressions use
-/// braces. Dot-prefixed properties are not HTML attributes and are never
-/// rendered automatically.
+/// A literal property value may be written directly; other expressions use
+/// braces. Properties are never emitted as HTML attributes.
 ///
-/// Component functions are ordinary functions whose parameters use any
-/// supported combination and order of [`Props`](crate::Props),
-/// [`Attrs`](crate::Attrs), and [`Children`](crate::Children). A component may
-/// omit `Attrs` to reject arbitrary attributes, or omit `Children` to reject a
-/// body. Props-only calls and calls with no attributes pass `()` as the
-/// attribute input.
+/// Omitting an `Attrs` parameter rejects HTML attributes. Omitting a `Children`
+/// parameter rejects a body. These constraints are checked at compile time
+/// instead of silently discarding unsupported input:
 ///
-/// # Escaping and trusted HTML
+/// ```compile_fail
+/// use avosetta::asx;
 ///
-/// Static text, strings, characters, formatting arguments, and attribute values
-/// escape ampersands, angle brackets, quotation marks, and apostrophes:
+/// mod ui {
+///     pub fn label() {}
+/// }
+///
+/// let _ = asx! { @ui::label[id: "label"]; };
+/// ```
+///
+/// ```compile_fail
+/// use avosetta::asx;
+///
+/// mod ui {
+///     pub fn label() {}
+/// }
+///
+/// let _ = asx! { @ui::label { "body" } };
+/// ```
+///
+/// An empty body `{}` is still a supplied body. Use a semicolon to omit the
+/// body entirely.
+///
+/// # Escaping and raw HTML
+///
+/// Static text, strings, characters, formatting arguments, and attribute
+/// values escape ampersands, angle brackets, quotation marks, and apostrophes:
 ///
 /// ```rust
 /// # #[cfg(any())]
@@ -259,7 +279,7 @@
 /// # }
 /// ```
 ///
-/// Use [`Raw`](crate::Raw) only for trusted content that should bypass escaping:
+/// Wrap trusted content in [`Raw`](crate::Raw) to bypass escaping:
 ///
 /// ```rust
 /// # #[cfg(any())]
@@ -269,12 +289,16 @@
 /// # }
 /// ```
 ///
-/// `Raw` also bypasses escaping inside an attribute, so wrapping untrusted input
-/// can break the surrounding markup.
+/// `Raw` also bypasses escaping in attributes. Never wrap untrusted input.
 ///
-/// # Conditional content
+/// # Control flow
 ///
-/// `@if` supports an optional `else` body. Both bodies contain ASX syntax:
+/// ASX control-flow forms begin with `@` and contain ASX markup in their
+/// bodies.
+///
+/// ## Conditions
+///
+/// `@if` accepts an optional `else` branch:
 ///
 /// ```rust
 /// # #[cfg(any())]
@@ -287,9 +311,9 @@
 /// # }
 /// ```
 ///
-/// # Iteration
+/// ## Loops
 ///
-/// `@for`, `@while`, and `@loop` mirror their Rust counterparts:
+/// `@for`, `@while`, and `@loop` follow their Rust counterparts:
 ///
 /// ```rust
 /// # #[cfg(any())]
@@ -319,12 +343,12 @@
 /// # }
 /// ```
 ///
-/// Rust statements, including `break`, can be placed inside an injected block.
+/// Injected Rust blocks may contain statements such as `break`.
 ///
-/// # Local bindings
+/// ## Local bindings
 ///
-/// `@let` introduces a Rust binding that is available to all following syntax
-/// in the same body:
+/// `@let` introduces a Rust binding that remains available to the following ASX
+/// markup in the same body:
 ///
 /// ```rust
 /// # #[cfg(any())]
@@ -334,12 +358,10 @@
 /// # }
 /// ```
 ///
-/// The statement ends at the semicolon, just like a Rust `let` statement.
+/// ## Pattern matching
 ///
-/// # Pattern matching
-///
-/// `@match` accepts Rust patterns and optional guards. Each arm body must be an
-/// ASX block:
+/// `@match` accepts Rust patterns and optional guards. Each arm contains an ASX
+/// block:
 ///
 /// ```rust
 /// # #[cfg(any())]
@@ -360,9 +382,6 @@
 #[macro_export]
 macro_rules! asx {
     ($($tt:tt)*) => {{
-        #[allow(unused_imports)]
-        use $crate::elements::*;
-
         #[inline(always)]
         const fn __coerce<T: $crate::Html>(x: T) -> impl $crate::Html { x }
 
@@ -371,17 +390,6 @@ macro_rules! asx {
             ::core::marker::PhantomData,
         ))
     }};
-}
-
-#[macro_export]
-#[doc(hidden)]
-macro_rules! __asx_autocomplete_element {
-    ($ident:ident) => {
-        #[cfg(any())]
-        use $crate::elements::$ident;
-    };
-
-    ($($tt:tt)*) => {};
 }
 
 #[macro_export]
@@ -528,9 +536,9 @@ macro_rules! __asx_expand {
         )
     };
 
-    (@{$expr:expr} $($rest:tt)*) => {
+    (@{$($tokens:tt)*} $($rest:tt)*) => {
         $crate::__asx_expand! {
-            @($expr)
+            @({ $($tokens)* })
             $($rest)*
         }
     };
@@ -625,23 +633,26 @@ macro_rules! __asx_expand {
         )
     };
     (
-        $path:path[$(.$name:ident: $value:tt),* $(,)?] { $($body:tt)* } $($rest:tt)*
+        @$path:path[$(.$name:ident: $value:tt),* $(,)?] { $($body:tt)* } $($rest:tt)*
     ) => {{
-        $crate::__asx_autocomplete_element!($path);
-
         $crate::Chain(
             {
-                let (fragment, props) = $crate::Fragment::props($path);
-                let (props, _attrs) = $crate::__attrs!(
+                let (fragment, props) = $crate::Fragment::props($crate::FnFragment(
+                    $path,
+                    ::core::marker::PhantomData,
+                ));
+                let (props, attrs) = $crate::__attrs!(
                     props,
                     { $(.$name: $value),* }
                 );
 
-                $crate::Fragment::call(
+                $crate::Fragment::html(
                     fragment,
-                    (),
-                    props.0,
-                    $crate::__asx_expand! { $($body)* },
+                    $crate::Context {
+                        attrs: attrs.0,
+                        props: props.0,
+                        children: $crate::__asx_expand! { $($body)* },
+                    },
                 )
             },
             $crate::__asx_expand!($($rest)*),
@@ -649,39 +660,50 @@ macro_rules! __asx_expand {
     }};
 
     (
-        $path:path[$(.$name:ident: $value:tt),* $(,)?]; $($rest:tt)*
+        @$path:path[$(.$name:ident: $value:tt),* $(,)?]; $($rest:tt)*
     ) => {{
-        $crate::__asx_autocomplete_element!($path);
-
         $crate::Chain(
             {
-                let (fragment, props) = $crate::Fragment::props($path);
-                let (props, _attrs) = $crate::__attrs!(
+                let (fragment, props) = $crate::Fragment::props($crate::FnFragment(
+                    $path,
+                    ::core::marker::PhantomData,
+                ));
+                let (props, attrs) = $crate::__attrs!(
                     props,
                     { $(.$name: $value),* }
                 );
 
-                $crate::Fragment::call(fragment, (), props.0, ())
+                $crate::Fragment::html(
+                    fragment,
+                    $crate::Context {
+                        attrs: attrs.0,
+                        props: props.0,
+                        children: $crate::Omitted,
+                    },
+                )
             },
             $crate::__asx_expand!($($rest)*),
         )
     }};
 
     (
-        $path:path[$($attrs:tt)*] { $($body:tt)* } $($rest:tt)*
+        @$path:path[$($attrs:tt)*] { $($body:tt)* } $($rest:tt)*
     ) => {{
-        $crate::__asx_autocomplete_element!($path);
-
         $crate::Chain(
             {
-                let (fragment, props) = $crate::Fragment::props($path);
+                let (fragment, props) = $crate::Fragment::props($crate::FnFragment(
+                    $path,
+                    ::core::marker::PhantomData,
+                ));
                 let (props, attrs) = $crate::__attrs!(props, { $($attrs)* });
 
-                $crate::Fragment::call(
+                $crate::Fragment::html(
                     fragment,
-                    attrs.0,
-                    props.0,
-                    $crate::__asx_expand! { $($body)* },
+                    $crate::Context {
+                        attrs: attrs.0,
+                        props: props.0,
+                        children: $crate::__asx_expand! { $($body)* },
+                    },
                 )
             },
             $crate::__asx_expand!($($rest)*),
@@ -689,41 +711,75 @@ macro_rules! __asx_expand {
     }};
 
     (
-        $path:path { $($body:tt)* } $($rest:tt)*
+        @$path:path { $($body:tt)* } $($rest:tt)*
     ) => {{
-        $crate::__asx_autocomplete_element!($path);
-
         $crate::__asx_expand! {
-            $path[] { $($body)* } $($rest)*
+            @$path[] { $($body)* } $($rest)*
         }
     }};
 
     (
-        $path:path[$($attrs:tt)*]; $($rest:tt)*
+        @$path:path[$($attrs:tt)*]; $($rest:tt)*
     ) => {{
-        $crate::__asx_autocomplete_element!($path);
-
         $crate::Chain(
             {
-                let (fragment, props) = $crate::Fragment::props($path);
+                let (fragment, props) = $crate::Fragment::props($crate::FnFragment(
+                    $path,
+                    ::core::marker::PhantomData,
+                ));
                 let (props, attrs) = $crate::__attrs!(props, { $($attrs)* });
 
-                $crate::Fragment::call(fragment, attrs.0, props.0, ())
+                $crate::Fragment::html(
+                    fragment,
+                    $crate::Context {
+                        attrs: attrs.0,
+                        props: props.0,
+                        children: $crate::Omitted,
+                    },
+                )
             },
             $crate::__asx_expand!($($rest)*),
         )
     }};
 
     (
-        $path:path; $($rest:tt)*
+        @$path:path; $($rest:tt)*
     ) => {{
-        $crate::__asx_autocomplete_element!($path);
-
         $crate::__asx_expand! {
-            $path[];
+            @$path[];
             $($rest)*
         }
     }};
 
+    (
+        $element:ident[$($attrs:tt)*] { $($body:tt)* } $($rest:tt)*
+    ) => {
+        $crate::__asx_expand! {
+            @$crate::elements::$element[$($attrs)*] { $($body)* } $($rest)*
+        }
+    };
 
+    (
+        $element:ident { $($body:tt)* } $($rest:tt)*
+    ) => {
+        $crate::__asx_expand! {
+            @$crate::elements::$element { $($body)* } $($rest)*
+        }
+    };
+
+    (
+        $element:ident[$($attrs:tt)*]; $($rest:tt)*
+    ) => {
+        $crate::__asx_expand! {
+            @$crate::elements::$element[$($attrs)*]; $($rest)*
+        }
+    };
+
+    (
+        $element:ident; $($rest:tt)*
+    ) => {
+        $crate::__asx_expand! {
+            @$crate::elements::$element; $($rest)*
+        }
+    };
 }

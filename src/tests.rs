@@ -26,6 +26,20 @@ fn dynamic_expressions_are_escaped() {
 }
 
 #[test]
+fn injected_blocks_support_statements() {
+    assert_html(
+        "&lt;block&gt;",
+        asx! {
+            @{
+                let left = "<";
+                let right = ">";
+                format!("{left}block{right}")
+            }
+        },
+    );
+}
+
+#[test]
 fn raw_strings_bypass_escaping() {
     assert_html(
         "&lt;safe&gt;<strong>trusted</strong>",
@@ -55,6 +69,14 @@ fn built_in_and_literal_elements_render_in_order() {
             "my-void";
         },
     );
+}
+
+#[test]
+fn built_in_elements_ignore_local_bindings() {
+    let html = "local value";
+
+    assert_html("<html><body></body></html>", asx! { html { body {} } });
+    assert_eq!(html, "local value");
 }
 
 #[test]
@@ -375,69 +397,69 @@ mod components {
 
 #[test]
 fn components_support_every_argument_combination_and_order() {
-    assert_html("<component></component>", asx! { components::zero; });
+    assert_html("<component></component>", asx! { @components::zero; });
     assert_html(
         "<component>P</component>",
-        asx! { components::p[.label: {String::from("P")}]; },
+        asx! { @components::p[.label: {String::from("P")}]; },
     );
     assert_html(
         "<component id=\"a\"></component>",
-        asx! { components::a[id: "a"]; },
+        asx! { @components::a[id: "a"]; },
     );
-    assert_html("<component>C</component>", asx! { components::c { "C" } });
+    assert_html("<component>C</component>", asx! { @components::c { "C" } });
 
     assert_html(
         "<component id=\"a\">P</component>",
-        asx! { components::pa[.label: {String::from("P")}, id: "a"]; },
+        asx! { @components::pa[.label: {String::from("P")}, id: "a"]; },
     );
     assert_html(
         "<component id=\"a\">P</component>",
-        asx! { components::ap[.label: {String::from("P")}, id: "a"]; },
+        asx! { @components::ap[.label: {String::from("P")}, id: "a"]; },
     );
     assert_html(
         "<component>PC</component>",
-        asx! { components::pc[.label: {String::from("P")}] { "C" } },
+        asx! { @components::pc[.label: {String::from("P")}] { "C" } },
     );
     assert_html(
         "<component>PC</component>",
-        asx! { components::cp[.label: {String::from("P")}] { "C" } },
+        asx! { @components::cp[.label: {String::from("P")}] { "C" } },
     );
     assert_html(
         "<component id=\"a\">C</component>",
-        asx! { components::ac[id: "a"] { "C" } },
+        asx! { @components::ac[id: "a"] { "C" } },
     );
     assert_html(
         "<component id=\"a\">C</component>",
-        asx! { components::ca[id: "a"] { "C" } },
+        asx! { @components::ca[id: "a"] { "C" } },
     );
 
     assert_html(
         "<component id=\"a\">PC</component>",
-        asx! { components::pac[.label: {String::from("P")}, id: "a"] { "C" } },
+        asx! { @components::pac[.label: {String::from("P")}, id: "a"] { "C" } },
     );
     assert_html(
         "<component id=\"a\">PC</component>",
-        asx! { components::pca[.label: {String::from("P")}, id: "a"] { "C" } },
+        asx! { @components::pca[.label: {String::from("P")}, id: "a"] { "C" } },
     );
     assert_html(
         "<component id=\"a\">PC</component>",
-        asx! { components::apc[.label: {String::from("P")}, id: "a"] { "C" } },
+        asx! { @components::apc[.label: {String::from("P")}, id: "a"] { "C" } },
     );
     assert_html(
         "<component id=\"a\">PC</component>",
-        asx! { components::acp[.label: {String::from("P")}, id: "a"] { "C" } },
+        asx! { @components::acp[.label: {String::from("P")}, id: "a"] { "C" } },
     );
     assert_html(
         "<component id=\"a\">PC</component>",
-        asx! { components::cpa[.label: {String::from("P")}, id: "a"] { "C" } },
+        asx! { @components::cpa[.label: {String::from("P")}, id: "a"] { "C" } },
     );
     assert_html(
         "<component id=\"a\">PC</component>",
-        asx! { components::cap[.label: {String::from("P")}, id: "a"] { "C" } },
+        asx! { @components::cap[.label: {String::from("P")}, id: "a"] { "C" } },
     );
 
     assert_html(
         "true",
-        asx! { components::property_literal[.enabled: true]; },
+        asx! { @components::property_literal[.enabled: true]; },
     );
 }
