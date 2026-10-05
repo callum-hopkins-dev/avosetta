@@ -20,8 +20,8 @@ pub trait StaticText: sealed::StaticText + Copy {
         // densely packed sequence of exactly Self::LEN initialized bytes.
         let bytes = unsafe { ::core::slice::from_raw_parts(ptr, Self::LEN) };
 
-        // SAFETY: Text can only be created from valid UTF-8, and Concat
-        // preserves UTF-8 validity by joining valid byte sequences.
+        // SAFETY: Every StaticText implementation contains valid UTF-8 or
+        // joins valid UTF-8 byte sequences without inserting other bytes.
         unsafe { ::core::str::from_utf8_unchecked(bytes) }
     }
 }
@@ -98,13 +98,13 @@ impl sealed::Segments for End {}
 impl Segments for End {
     type Kind = EmptySegments;
 
-    type PrependStatic<S: StaticText> = Static<S, Self>;
+    type PrependStatic<S: StaticText> = Static<RunOne<S, RunEnd>, Self>;
     type PrependDynamic<D: DynamicWrite> = Dynamic<D, Self>;
     type PrependPresent<D: DynamicWrite> = Present<D, Self>;
 
     #[inline(always)]
     fn prepend_static<S: StaticText>(self, x: S) -> Self::PrependStatic<S> {
-        Static(x, self)
+        Static(RunOne(x, RunEnd), self)
     }
 
     #[inline(always)]
@@ -127,25 +127,25 @@ pub struct Static<S, T>(pub S, pub T);
 
 impl<S, T> sealed::Segments for Static<S, T>
 where
-    S: StaticText,
+    S: StaticRun,
     T: Segments,
 {
 }
 
 impl<S, T> Segments for Static<S, T>
 where
-    S: StaticText,
+    S: StaticRun,
     T: Segments,
 {
     type Kind = <T::Kind as SegmentKind>::PrependStatic;
 
-    type PrependStatic<X: StaticText> = Static<Concat<X, S>, T>;
+    type PrependStatic<X: StaticText> = Static<S::Prepend<X>, T>;
     type PrependDynamic<D: DynamicWrite> = Dynamic<D, Self>;
     type PrependPresent<D: DynamicWrite> = Present<D, Self>;
 
     #[inline(always)]
     fn prepend_static<X: StaticText>(self, x: X) -> Self::PrependStatic<X> {
-        Static(Concat(x, self.0), self.1)
+        Static(self.0.prepend(x), self.1)
     }
 
     #[inline(always)]
@@ -183,13 +183,13 @@ where
 {
     type Kind = <T::Kind as SegmentKind>::PrependDynamic;
 
-    type PrependStatic<S: StaticText> = Static<S, Self>;
+    type PrependStatic<S: StaticText> = Static<RunOne<S, RunEnd>, Self>;
     type PrependDynamic<X: DynamicWrite> = Dynamic<X, Self>;
     type PrependPresent<X: DynamicWrite> = Present<X, Self>;
 
     #[inline(always)]
     fn prepend_static<S: StaticText>(self, x: S) -> Self::PrependStatic<S> {
-        Static(x, self)
+        Static(RunOne(x, RunEnd), self)
     }
 
     #[inline(always)]
@@ -227,13 +227,13 @@ where
 {
     type Kind = PresentSegments;
 
-    type PrependStatic<S: StaticText> = Static<S, Self>;
+    type PrependStatic<S: StaticText> = Static<RunOne<S, RunEnd>, Self>;
     type PrependDynamic<X: DynamicWrite> = Dynamic<X, Self>;
     type PrependPresent<X: DynamicWrite> = Present<X, Self>;
 
     #[inline(always)]
     fn prepend_static<S: StaticText>(self, x: S) -> Self::PrependStatic<S> {
-        Static(x, self)
+        Static(RunOne(x, RunEnd), self)
     }
 
     #[inline(always)]
@@ -303,6 +303,92 @@ where
     T1: StaticText,
 {
     const LEN: usize = T0::LEN + T1::LEN;
+}
+
+#[doc(hidden)]
+pub trait StaticRun: StaticText {
+    type Prepend<S: StaticText>: StaticRun;
+
+    fn prepend<S: StaticText>(self, x: S) -> Self::Prepend<S>;
+}
+
+#[doc(hidden)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[repr(C)]
+pub struct RunEnd;
+
+impl sealed::StaticText for RunEnd {}
+
+impl StaticText for RunEnd {
+    const LEN: usize = 0;
+}
+
+impl StaticRun for RunEnd {
+    type Prepend<S: StaticText> = RunOne<S, Self>;
+
+    #[inline(always)]
+    fn prepend<S: StaticText>(self, x: S) -> Self::Prepend<S> {
+        RunOne(x, self)
+    }
+}
+
+#[doc(hidden)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[repr(transparent)]
+pub struct RunZero<R>(pub R);
+
+impl<R> sealed::StaticText for RunZero<R> where R: StaticRun {}
+
+impl<R> StaticText for RunZero<R>
+where
+    R: StaticRun,
+{
+    const LEN: usize = R::LEN;
+}
+
+impl<R> StaticRun for RunZero<R>
+where
+    R: StaticRun,
+{
+    type Prepend<S: StaticText> = RunOne<S, R>;
+
+    #[inline(always)]
+    fn prepend<S: StaticText>(self, x: S) -> Self::Prepend<S> {
+        RunOne(x, self.0)
+    }
+}
+
+#[doc(hidden)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[repr(C)]
+pub struct RunOne<B, R>(pub B, pub R);
+
+impl<B, R> sealed::StaticText for RunOne<B, R>
+where
+    B: StaticText,
+    R: StaticRun,
+{
+}
+
+impl<B, R> StaticText for RunOne<B, R>
+where
+    B: StaticText,
+    R: StaticRun,
+{
+    const LEN: usize = B::LEN + R::LEN;
+}
+
+impl<B, R> StaticRun for RunOne<B, R>
+where
+    B: StaticText,
+    R: StaticRun,
+{
+    type Prepend<S: StaticText> = RunZero<R::Prepend<Concat<S, B>>>;
+
+    #[inline(always)]
+    fn prepend<S: StaticText>(self, x: S) -> Self::Prepend<S> {
+        RunZero(self.1.prepend(Concat(x, self.0)))
+    }
 }
 
 /// Two HTML values rendered consecutively.
