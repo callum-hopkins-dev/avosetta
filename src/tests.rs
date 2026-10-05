@@ -332,6 +332,18 @@ mod components {
         pub enabled: bool,
     }
 
+    impl ComponentProps {
+        pub fn label(mut self, label: String) -> Self {
+            self.label = label;
+            self
+        }
+
+        pub fn enabled(mut self, enabled: bool) -> Self {
+            self.enabled = enabled;
+            self
+        }
+    }
+
     fn render<A, C>(
         props: Props<ComponentProps>,
         attrs: Attrs<A>,
