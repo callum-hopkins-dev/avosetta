@@ -59,9 +59,11 @@ where
     fn write(self, s: &mut String) {
         if self.1.is_attribute_present() {
             s.push(' ');
+            let name_start = s.len();
             self.0.write(s);
+            let name = name_start..s.len();
             s.push_str("=\"");
-            self.1.write(s);
+            self.1.write_attribute_value(name, s);
             s.push('"');
         }
     }
@@ -457,6 +459,38 @@ macro_rules! __attrs_expand {
             style: $crate::Chain($attrs.style, style),
             other: $crate::Chain($attrs.other, other),
         };
+    };
+
+    ($props:ident, $attrs:ident, $name:ident $(, $($rest:tt)*)?) => {
+        $crate::__attrs_expand!(
+            $props,
+            $attrs,
+            {$crate::text!(@raw ::core::stringify!($name))}:
+                {$crate::text!(@raw ::core::stringify!($name))}
+            $(, $($rest)*)?
+        );
+    };
+
+    ($props:ident, $attrs:ident, {$name:literal} $(, $($rest:tt)*)?) => {
+        $crate::__attrs_expand!(
+            $props,
+            $attrs,
+            {$crate::text!(@raw $name)}: {$crate::text!(@raw $name)}
+            $(, $($rest)*)?
+        );
+    };
+
+    ($props:ident, $attrs:ident, {$name:expr} $(, $($rest:tt)*)?) => {
+        let $attrs = $crate::AttributeSet {
+            class: $attrs.class,
+            style: $attrs.style,
+            other: $crate::Chain(
+                $attrs.other,
+                $crate::Attr($name, true),
+            ),
+        };
+
+        $crate::__attrs_expand!($props, $attrs, $($($rest)*)?);
     };
 
     ($props:ident, $attrs:ident, class: $value:literal $(, $($rest:tt)*)?) => {

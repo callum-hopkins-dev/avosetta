@@ -90,7 +90,7 @@ fn attributes_support_static_dynamic_and_quoted_forms() {
             "style=\"color: red;display: block;\" ",
             "id=\"root\" data-static=\"&lt;&amp;&quot;&#39;\" ",
             "title=\"&lt;&amp;&quot;\" data-dynamic=\"value\" ",
-            "hidden=\"true\"></div>"
+            "hidden=\"hidden\"></div>"
         ),
         asx! {
             div[
@@ -108,6 +108,16 @@ fn attributes_support_static_dynamic_and_quoted_forms() {
                 omitted: {None::<&str>}
             ] {}
         },
+    );
+}
+
+#[test]
+fn valueless_attributes_are_static_true_attributes() {
+    let dynamic_name = String::from("data-dynamic");
+
+    assert_html(
+        "<input required=\"required\" data-static=\"data-static\" data-dynamic=\"data-dynamic\">",
+        asx! { input[required, {"data-static"}, {dynamic_name}]; },
     );
 }
 

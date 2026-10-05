@@ -60,6 +60,12 @@ pub trait Html: Sized {
         true
     }
 
+    #[inline(always)]
+    #[doc(hidden)]
+    fn write_attribute_value(self, _name: ::core::ops::Range<usize>, s: &mut String) {
+        self.write(s);
+    }
+
     /// Renders this value at the end of an existing string.
     #[inline(always)]
     fn write(self, s: &mut String) {
@@ -537,6 +543,11 @@ impl Html for bool {
     #[inline(always)]
     fn is_attribute_present(&self) -> bool {
         *self
+    }
+
+    #[inline(always)]
+    fn write_attribute_value(self, name: ::core::ops::Range<usize>, s: &mut String) {
+        s.extend_from_within(name);
     }
 }
 
