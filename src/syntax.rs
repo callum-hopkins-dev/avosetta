@@ -129,6 +129,17 @@
 /// # }
 /// ```
 ///
+/// An attribute name without a value is shorthand for the boolean value
+/// `true`. This works with identifier names, quoted names, and dynamic name
+/// expressions:
+///
+/// ```rust
+/// # #[cfg(any())]
+/// # asx! {
+/// input[required, {"data-ready"}, {dynamic_name}];
+/// # }
+/// ```
+///
 /// String literals are static attribute values. Wrap dynamic values and other
 /// Rust expressions in braces:
 ///
@@ -157,7 +168,9 @@
 /// # }
 /// ```
 ///
-/// This emits `value` and omits both `title` and `disabled`.
+/// A present boolean attribute repeats its name as its value. This emits
+/// `value`, emits `checked="checked"` for a true `checked` value, and omits
+/// both `title` and `disabled`.
 ///
 /// ## Class and style
 ///
