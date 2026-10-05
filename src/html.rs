@@ -535,6 +535,48 @@ where
     }
 }
 
+/// Concatenates HTML values without allocating an intermediate string.
+///
+/// Literal arguments become escaped static text, allowing adjacent static
+/// segments to collapse at compile time. Other arguments retain their own
+/// [`Html`] implementations, including direct integer and float formatting.
+///
+/// # Example
+///
+/// ```
+/// use avosetta::Html;
+///
+/// let width = 320;
+/// let style = avosetta::concat!("width: ", width, "px");
+///
+/// assert_eq!(style.to_string(), "width: 320px");
+/// ```
+#[macro_export]
+macro_rules! concat {
+    () => {
+        ()
+    };
+
+    ($literal:literal $(,)?) => {
+        $crate::__static_text!(::core::concat!($literal))
+    };
+
+    ($literal:literal, $($rest:tt)+) => {
+        $crate::Chain(
+            $crate::__static_text!(::core::concat!($literal)),
+            $crate::concat!($($rest)+),
+        )
+    };
+
+    ($value:expr $(,)?) => {
+        $value
+    };
+
+    ($value:expr, $($rest:tt)+) => {
+        $crate::Chain($value, $crate::concat!($($rest)+))
+    };
+}
+
 #[macro_export]
 #[doc(hidden)]
 macro_rules! __static_text {

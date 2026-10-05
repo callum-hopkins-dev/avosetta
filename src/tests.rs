@@ -53,7 +53,7 @@ fn raw_strings_bypass_escaping() {
 #[test]
 fn built_in_and_literal_elements_render_in_order() {
     assert_html(
-        concat!(
+        ::core::concat!(
             "<div><span>text</span><br></div>",
             "<input type=\"text\">",
             "<my-widget data-id=\"7\">body</my-widget>",
@@ -85,7 +85,7 @@ fn attributes_support_static_dynamic_and_quoted_forms() {
     let attribute_name = String::from("data-dynamic");
 
     assert_html(
-        concat!(
+        ::core::concat!(
             "<div class=\"one two&lt;&amp;\" ",
             "style=\"color: red;display: block;\" ",
             "id=\"root\" data-static=\"&lt;&amp;&quot;&#39;\" ",
@@ -120,7 +120,7 @@ fn attribute_projection_merges_class_style_and_other_attributes() {
     .1;
 
     assert_html(
-        concat!(
+        ::core::concat!(
             "<div class=\"local base\" ",
             "style=\"display: block;color: red;\" ",
             "id=\"projected\"></div>"
@@ -263,6 +263,21 @@ fn primitive_html_implementations_render_consistently() {
     assert_html("&lt;fmt&gt;", format_args!("<{}>", "fmt"));
     assert_html("&lt;some&gt;", Some("<some>"));
     assert_html("", None::<&str>);
+}
+
+#[test]
+fn concat_combines_literals_and_html_values() {
+    let width = 320;
+
+    assert_html("", crate::concat!());
+    assert_html(
+        "width: 320px&lt;&amp;",
+        crate::concat!("width: ", width, "px", String::from("<&"),),
+    );
+    assert_html(
+        "<div style=\"width: 320px;\"></div>",
+        asx! { div[style: {crate::concat!("width: ", width, "px")}] {} },
+    );
 }
 
 #[test]
