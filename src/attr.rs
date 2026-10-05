@@ -4,48 +4,31 @@ mod sealed {
     pub trait SegmentKind {}
 }
 
-type Kind<Name, Value> = <<Chain<Name, Value> as Html>::Segments<End> as Segments>::Kind;
-
-type GroupKind<T> = <<T as Html>::Segments<crate::html::End> as Segments>::Kind;
-
 #[doc(hidden)]
 pub trait SegmentKind: sealed::SegmentKind {
     type PrependStatic: SegmentKind;
 
+    type PrependDynamic: SegmentKind;
+
     type Attribute<N: Html, V: Html, T: Segments>: Segments;
 
-    type OptionalAttribute<N: Html, V: Html, T: Segments>: Segments;
+    type GroupAttribute<N: Html, V: Html, T: Segments>: Segments;
 
     type JoinClass<L: Html, R: Html, T: Segments>: Segments;
 
-    type JoinClassAfterStatic<L: Html, R: Html, T: Segments>: Segments;
+    fn attribute<N: Html, V: Html, T: Segments>(x: Attr<N, V>, tail: T)
+    -> Self::Attribute<N, V, T>;
 
-    type JoinClassAfterDynamic<L: Html, R: Html, T: Segments>: Segments;
-
-    fn attribute<N: Html, V: Html, T: Segments>(x: Attr<N, V>, t: T) -> Self::Attribute<N, V, T>;
-
-    fn optional_attribute<N: Html, V: Html, T: Segments>(
+    fn group_attribute<N: Html, V: Html, T: Segments>(
         x: Attr<N, V>,
-        t: T,
-    ) -> Self::OptionalAttribute<N, V, T>;
+        tail: T,
+    ) -> Self::GroupAttribute<N, V, T>;
 
     fn join_class<L: Html, R: Html, T: Segments>(
         left: L,
         right: R,
         tail: T,
     ) -> Self::JoinClass<L, R, T>;
-
-    fn join_class_after_static<L: Html, R: Html, T: Segments>(
-        left: L,
-        right: R,
-        tail: T,
-    ) -> Self::JoinClassAfterStatic<L, R, T>;
-
-    fn join_class_after_dynamic<L: Html, R: Html, T: Segments>(
-        left: L,
-        right: R,
-        tail: T,
-    ) -> Self::JoinClassAfterDynamic<L, R, T>;
 }
 
 /// An HTML attribute name and value pair.
@@ -59,11 +42,11 @@ where
     Name: Html,
     Value: Html,
 {
-    type Segments<T: Segments> = <Kind<Name, Value> as SegmentKind>::Attribute<Name, Value, T>;
+    type Segments<T: Segments> = <GroupKind<Value> as SegmentKind>::Attribute<Name, Value, T>;
 
     #[inline(always)]
     fn segments<T: Segments>(self, x: T) -> Self::Segments<T> {
-        <Kind<Name, Value> as SegmentKind>::attribute(self, x)
+        <GroupKind<Value> as SegmentKind>::attribute(self, x)
     }
 }
 
@@ -74,7 +57,7 @@ where
 {
     #[inline(always)]
     fn write(self, s: &mut String) {
-        if self.1.is_present() {
+        if self.1.is_attribute_present() {
             s.push(' ');
             self.0.write(s);
             s.push_str("=\"");
@@ -93,28 +76,28 @@ impl sealed::SegmentKind for EmptySegments {}
 impl SegmentKind for EmptySegments {
     type PrependStatic = StaticSegments;
 
-    type Attribute<N: Html, V: Html, T: Segments> =
-        <StaticSegments as SegmentKind>::Attribute<N, V, T>;
+    type PrependDynamic = ConditionalSegments;
 
-    type OptionalAttribute<N: Html, V: Html, T: Segments> = T;
+    type Attribute<N: Html, V: Html, T: Segments> = T;
+
+    type GroupAttribute<N: Html, V: Html, T: Segments> = T;
 
     type JoinClass<L: Html, R: Html, T: Segments> = R::Segments<T>;
 
-    type JoinClassAfterStatic<L: Html, R: Html, T: Segments> = L::Segments<T>;
-
-    type JoinClassAfterDynamic<L: Html, R: Html, T: Segments> = L::Segments<T>;
-
     #[inline(always)]
-    fn attribute<N: Html, V: Html, T: Segments>(x: Attr<N, V>, t: T) -> Self::Attribute<N, V, T> {
-        <StaticSegments as SegmentKind>::attribute(x, t)
+    fn attribute<N: Html, V: Html, T: Segments>(
+        _x: Attr<N, V>,
+        tail: T,
+    ) -> Self::Attribute<N, V, T> {
+        tail
     }
 
     #[inline(always)]
-    fn optional_attribute<N: Html, V: Html, T: Segments>(
+    fn group_attribute<N: Html, V: Html, T: Segments>(
         _x: Attr<N, V>,
-        t: T,
-    ) -> Self::OptionalAttribute<N, V, T> {
-        t
+        tail: T,
+    ) -> Self::GroupAttribute<N, V, T> {
+        tail
     }
 
     #[inline(always)]
@@ -124,24 +107,6 @@ impl SegmentKind for EmptySegments {
         tail: T,
     ) -> Self::JoinClass<L, R, T> {
         right.segments(tail)
-    }
-
-    #[inline(always)]
-    fn join_class_after_static<L: Html, R: Html, T: Segments>(
-        left: L,
-        _right: R,
-        tail: T,
-    ) -> Self::JoinClassAfterStatic<L, R, T> {
-        left.segments(tail)
-    }
-
-    #[inline(always)]
-    fn join_class_after_dynamic<L: Html, R: Html, T: Segments>(
-        left: L,
-        _right: R,
-        tail: T,
-    ) -> Self::JoinClassAfterDynamic<L, R, T> {
-        left.segments(tail)
     }
 }
 
@@ -154,40 +119,29 @@ impl sealed::SegmentKind for StaticSegments {}
 impl SegmentKind for StaticSegments {
     type PrependStatic = Self;
 
-    type Attribute<N: Html, V: Html, T: Segments> =
-        <Chain<Text<1>, Chain<N, Chain<Text<2>, Chain<V, Text<1>>>>> as Html>::Segments<T>;
+    type PrependDynamic = PresentSegments;
 
-    type OptionalAttribute<N: Html, V: Html, T: Segments> = <Attr<N, V> as Html>::Segments<T>;
+    type Attribute<N: Html, V: Html, T: Segments> = ExpandedAttribute<N, V, T>;
+
+    type GroupAttribute<N: Html, V: Html, T: Segments> = ExpandedAttribute<N, V, T>;
 
     type JoinClass<L: Html, R: Html, T: Segments> =
-        <GroupKind<R> as SegmentKind>::JoinClassAfterStatic<L, R, T>;
-
-    type JoinClassAfterStatic<L: Html, R: Html, T: Segments> =
         <Chain<L, Chain<Text<1>, R>> as Html>::Segments<T>;
 
-    type JoinClassAfterDynamic<L: Html, R: Html, T: Segments> = T::PrependDynamic<ClassChain<L, R>>;
-
     #[inline(always)]
-    fn attribute<N: Html, V: Html, T: Segments>(x: Attr<N, V>, t: T) -> Self::Attribute<N, V, T> {
-        Chain(
-            crate::__static_text!(@raw " "),
-            Chain(
-                x.0,
-                Chain(
-                    crate::__static_text!(@raw "=\""),
-                    Chain(x.1, crate::__static_text!(@raw "\"")),
-                ),
-            ),
-        )
-        .segments(t)
+    fn attribute<N: Html, V: Html, T: Segments>(
+        x: Attr<N, V>,
+        tail: T,
+    ) -> Self::Attribute<N, V, T> {
+        expand_attribute(x, tail)
     }
 
     #[inline(always)]
-    fn optional_attribute<N: Html, V: Html, T: Segments>(
+    fn group_attribute<N: Html, V: Html, T: Segments>(
         x: Attr<N, V>,
-        t: T,
-    ) -> Self::OptionalAttribute<N, V, T> {
-        x.segments(t)
+        tail: T,
+    ) -> Self::GroupAttribute<N, V, T> {
+        expand_attribute(x, tail)
     }
 
     #[inline(always)]
@@ -196,59 +150,42 @@ impl SegmentKind for StaticSegments {
         right: R,
         tail: T,
     ) -> Self::JoinClass<L, R, T> {
-        <GroupKind<R> as SegmentKind>::join_class_after_static(left, right, tail)
-    }
-
-    #[inline(always)]
-    fn join_class_after_static<L: Html, R: Html, T: Segments>(
-        left: L,
-        right: R,
-        tail: T,
-    ) -> Self::JoinClassAfterStatic<L, R, T> {
         Chain(left, Chain(crate::__static_text!(@raw " "), right)).segments(tail)
-    }
-
-    #[inline(always)]
-    fn join_class_after_dynamic<L: Html, R: Html, T: Segments>(
-        left: L,
-        right: R,
-        tail: T,
-    ) -> Self::JoinClassAfterDynamic<L, R, T> {
-        tail.prepend_dynamic(ClassChain(left, right))
     }
 }
 
 #[doc(hidden)]
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub struct DynamicSegments;
+pub struct PresentSegments;
 
-impl sealed::SegmentKind for DynamicSegments {}
+impl sealed::SegmentKind for PresentSegments {}
 
-impl SegmentKind for DynamicSegments {
+impl SegmentKind for PresentSegments {
     type PrependStatic = Self;
 
-    type Attribute<N: Html, V: Html, T: Segments> = T::PrependDynamic<Attr<N, V>>;
+    type PrependDynamic = Self;
 
-    type OptionalAttribute<N: Html, V: Html, T: Segments> = <Attr<N, V> as Html>::Segments<T>;
+    type Attribute<N: Html, V: Html, T: Segments> = ExpandedAttribute<N, V, T>;
+
+    type GroupAttribute<N: Html, V: Html, T: Segments> = ExpandedAttribute<N, V, T>;
 
     type JoinClass<L: Html, R: Html, T: Segments> =
-        <GroupKind<R> as SegmentKind>::JoinClassAfterDynamic<L, R, T>;
-
-    type JoinClassAfterStatic<L: Html, R: Html, T: Segments> = T::PrependDynamic<ClassChain<L, R>>;
-
-    type JoinClassAfterDynamic<L: Html, R: Html, T: Segments> = T::PrependDynamic<ClassChain<L, R>>;
+        <Chain<L, Chain<Text<1>, R>> as Html>::Segments<T>;
 
     #[inline(always)]
-    fn attribute<N: Html, V: Html, T: Segments>(x: Attr<N, V>, t: T) -> Self::Attribute<N, V, T> {
-        t.prepend_dynamic(x)
+    fn attribute<N: Html, V: Html, T: Segments>(
+        x: Attr<N, V>,
+        tail: T,
+    ) -> Self::Attribute<N, V, T> {
+        expand_attribute(x, tail)
     }
 
     #[inline(always)]
-    fn optional_attribute<N: Html, V: Html, T: Segments>(
+    fn group_attribute<N: Html, V: Html, T: Segments>(
         x: Attr<N, V>,
-        t: T,
-    ) -> Self::OptionalAttribute<N, V, T> {
-        x.segments(t)
+        tail: T,
+    ) -> Self::GroupAttribute<N, V, T> {
+        expand_attribute(x, tail)
     }
 
     #[inline(always)]
@@ -257,25 +194,51 @@ impl SegmentKind for DynamicSegments {
         right: R,
         tail: T,
     ) -> Self::JoinClass<L, R, T> {
-        <GroupKind<R> as SegmentKind>::join_class_after_dynamic(left, right, tail)
+        Chain(left, Chain(crate::__static_text!(@raw " "), right)).segments(tail)
+    }
+}
+
+#[doc(hidden)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct ConditionalSegments;
+
+impl sealed::SegmentKind for ConditionalSegments {}
+
+impl SegmentKind for ConditionalSegments {
+    type PrependStatic = PresentSegments;
+
+    type PrependDynamic = Self;
+
+    type Attribute<N: Html, V: Html, T: Segments> = T::PrependDynamic<Attr<N, V>>;
+
+    type GroupAttribute<N: Html, V: Html, T: Segments> = ExpandedAttribute<N, V, T>;
+
+    type JoinClass<L: Html, R: Html, T: Segments> =
+        <Chain<L, Chain<Text<1>, R>> as Html>::Segments<T>;
+
+    #[inline(always)]
+    fn attribute<N: Html, V: Html, T: Segments>(
+        x: Attr<N, V>,
+        tail: T,
+    ) -> Self::Attribute<N, V, T> {
+        tail.prepend_dynamic(x)
     }
 
     #[inline(always)]
-    fn join_class_after_static<L: Html, R: Html, T: Segments>(
-        left: L,
-        right: R,
+    fn group_attribute<N: Html, V: Html, T: Segments>(
+        x: Attr<N, V>,
         tail: T,
-    ) -> Self::JoinClassAfterStatic<L, R, T> {
-        tail.prepend_dynamic(ClassChain(left, right))
+    ) -> Self::GroupAttribute<N, V, T> {
+        expand_attribute(x, tail)
     }
 
     #[inline(always)]
-    fn join_class_after_dynamic<L: Html, R: Html, T: Segments>(
+    fn join_class<L: Html, R: Html, T: Segments>(
         left: L,
         right: R,
         tail: T,
-    ) -> Self::JoinClassAfterDynamic<L, R, T> {
-        tail.prepend_dynamic(ClassChain(left, right))
+    ) -> Self::JoinClass<L, R, T> {
+        Chain(left, Chain(crate::__static_text!(@raw " "), right)).segments(tail)
     }
 }
 
@@ -359,11 +322,11 @@ impl<V> Html for Class<V>
 where
     V: Html,
 {
-    type Segments<T: Segments> = <GroupKind<V> as SegmentKind>::OptionalAttribute<Text<5>, V, T>;
+    type Segments<T: Segments> = <GroupKind<V> as SegmentKind>::GroupAttribute<Text<5>, V, T>;
 
     #[inline(always)]
     fn segments<T: Segments>(self, x: T) -> Self::Segments<T> {
-        <GroupKind<V> as SegmentKind>::optional_attribute(
+        <GroupKind<V> as SegmentKind>::group_attribute(
             Attr(crate::__static_text!(@raw "class"), self.0),
             x,
         )
@@ -385,35 +348,6 @@ where
     fn segments<T: Segments>(self, x: T) -> Self::Segments<T> {
         <GroupKind<L> as SegmentKind>::join_class(self.0, self.1, x)
     }
-
-    #[inline(always)]
-    fn is_present(&self) -> bool {
-        self.0.is_present() || self.1.is_present()
-    }
-}
-
-impl<L, R> DynamicWrite for ClassChain<L, R>
-where
-    L: Html,
-    R: Html,
-{
-    #[inline(always)]
-    fn write(self, s: &mut String) {
-        let left = self.0.is_present();
-        let right = self.1.is_present();
-
-        if left {
-            self.0.write(s);
-        }
-
-        if left && right {
-            s.push(' ');
-        }
-
-        if right {
-            self.1.write(s);
-        }
-    }
 }
 
 #[doc(hidden)]
@@ -424,11 +358,11 @@ impl<V> Html for Style<V>
 where
     V: Html,
 {
-    type Segments<T: Segments> = <GroupKind<V> as SegmentKind>::OptionalAttribute<Text<5>, V, T>;
+    type Segments<T: Segments> = <GroupKind<V> as SegmentKind>::GroupAttribute<Text<5>, V, T>;
 
     #[inline(always)]
     fn segments<T: Segments>(self, x: T) -> Self::Segments<T> {
-        <GroupKind<V> as SegmentKind>::optional_attribute(
+        <GroupKind<V> as SegmentKind>::group_attribute(
             Attr(crate::__static_text!(@raw "style"), self.0),
             x,
         )
@@ -443,30 +377,37 @@ impl<V> Html for StyleValue<V>
 where
     V: Html,
 {
-    type Segments<T: Segments> = T::PrependDynamic<Self>;
+    type Segments<T: Segments> = <Chain<V, Text<1>> as Html>::Segments<T>;
 
     #[inline(always)]
     fn segments<T: Segments>(self, x: T) -> Self::Segments<T> {
-        x.prepend_dynamic(self)
-    }
-
-    #[inline(always)]
-    fn is_present(&self) -> bool {
-        self.0.is_present()
+        Chain(self.0, crate::__static_text!(@raw ";")).segments(x)
     }
 }
 
-impl<V> DynamicWrite for StyleValue<V>
+type GroupKind<T> = <<T as Html>::Segments<End> as Segments>::Kind;
+
+type ExpandedAttribute<N, V, T> =
+    <Chain<Text<1>, Chain<N, Chain<Text<2>, Chain<V, Text<1>>>>> as Html>::Segments<T>;
+
+#[inline(always)]
+fn expand_attribute<N, V, T>(x: Attr<N, V>, tail: T) -> ExpandedAttribute<N, V, T>
 where
+    N: Html,
     V: Html,
+    T: Segments,
 {
-    #[inline(always)]
-    fn write(self, s: &mut String) {
-        if self.0.is_present() {
-            Html::write(self.0, s);
-            s.push(';');
-        }
-    }
+    Chain(
+        crate::__static_text!(@raw " "),
+        Chain(
+            x.0,
+            Chain(
+                crate::__static_text!(@raw "=\""),
+                Chain(x.1, crate::__static_text!(@raw "\"")),
+            ),
+        ),
+    )
+    .segments(tail)
 }
 
 #[macro_export]

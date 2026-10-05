@@ -104,6 +104,7 @@ fn attributes_support_static_dynamic_and_quoted_forms() {
                 {attribute_name}: {"value"},
                 hidden: {true},
                 disabled: {false},
+                empty: {()},
                 omitted: {None::<&str>}
             ] {}
         },
@@ -136,7 +137,7 @@ fn attribute_projection_merges_class_style_and_other_attributes() {
 }
 
 #[test]
-fn projected_attributes_preserve_presence_rules() {
+fn projected_attributes_apply_contextual_presence_rules() {
     let projected = crate::__attrs!((), {
         class: {Some("projected")},
         style: {None::<&str>},
@@ -146,8 +147,27 @@ fn projected_attributes_preserve_presence_rules() {
     .1;
 
     assert_html(
-        "<div class=\"local projected\" title=\"&lt;&amp;\"></div>",
+        "<div class=\"local projected\" style=\";\" title=\"&lt;&amp;\"></div>",
         asx! { div[class: "local", ..projected] {} },
+    );
+}
+
+#[test]
+fn class_and_style_use_normal_interpolation() {
+    let flag = false;
+
+    assert_html(
+        "<div class=\"false\" style=\"false;\"></div>",
+        asx! { div[class: {flag}, style: {flag}] {} },
+    );
+    assert_html(
+        "<div class=\"\" style=\";\"></div>",
+        asx! {
+            div[
+                class: {None::<&str>},
+                style: {None::<&str>}
+            ] {}
+        },
     );
 }
 
@@ -277,6 +297,12 @@ fn concat_combines_literals_and_html_values() {
     assert_html(
         "<div style=\"width: 320px;\"></div>",
         asx! { div[style: {crate::concat!("width: ", width, "px")}] {} },
+    );
+    assert_html(
+        "<div data-size=\"width: 320px\"></div>",
+        asx! {
+            div[{"data-size"}: {crate::concat!("width: ", width, "px")}] {}
+        },
     );
 }
 
