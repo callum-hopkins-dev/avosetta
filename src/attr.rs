@@ -150,7 +150,7 @@ impl SegmentKind for StaticSegments {
         right: R,
         tail: T,
     ) -> Self::JoinClass<L, R, T> {
-        Chain(left, Chain(crate::__static_text!(@raw " "), right)).segments(tail)
+        Chain(left, Chain(crate::text!(@raw " "), right)).segments(tail)
     }
 }
 
@@ -194,7 +194,7 @@ impl SegmentKind for PresentSegments {
         right: R,
         tail: T,
     ) -> Self::JoinClass<L, R, T> {
-        Chain(left, Chain(crate::__static_text!(@raw " "), right)).segments(tail)
+        Chain(left, Chain(crate::text!(@raw " "), right)).segments(tail)
     }
 }
 
@@ -238,7 +238,7 @@ impl SegmentKind for ConditionalSegments {
         right: R,
         tail: T,
     ) -> Self::JoinClass<L, R, T> {
-        Chain(left, Chain(crate::__static_text!(@raw " "), right)).segments(tail)
+        Chain(left, Chain(crate::text!(@raw " "), right)).segments(tail)
     }
 }
 
@@ -326,10 +326,7 @@ where
 
     #[inline(always)]
     fn segments<T: Segments>(self, x: T) -> Self::Segments<T> {
-        <GroupKind<V> as SegmentKind>::group_attribute(
-            Attr(crate::__static_text!(@raw "class"), self.0),
-            x,
-        )
+        <GroupKind<V> as SegmentKind>::group_attribute(Attr(crate::text!(@raw "class"), self.0), x)
     }
 }
 
@@ -362,10 +359,7 @@ where
 
     #[inline(always)]
     fn segments<T: Segments>(self, x: T) -> Self::Segments<T> {
-        <GroupKind<V> as SegmentKind>::group_attribute(
-            Attr(crate::__static_text!(@raw "style"), self.0),
-            x,
-        )
+        <GroupKind<V> as SegmentKind>::group_attribute(Attr(crate::text!(@raw "style"), self.0), x)
     }
 }
 
@@ -381,7 +375,7 @@ where
 
     #[inline(always)]
     fn segments<T: Segments>(self, x: T) -> Self::Segments<T> {
-        Chain(self.0, crate::__static_text!(@raw ";")).segments(x)
+        Chain(self.0, crate::text!(@raw ";")).segments(x)
     }
 }
 
@@ -398,12 +392,12 @@ where
     T: Segments,
 {
     Chain(
-        crate::__static_text!(@raw " "),
+        crate::text!(@raw " "),
         Chain(
             x.0,
             Chain(
-                crate::__static_text!(@raw "=\""),
-                Chain(x.1, crate::__static_text!(@raw "\"")),
+                crate::text!(@raw "=\""),
+                Chain(x.1, crate::text!(@raw "\"")),
             ),
         ),
     )
@@ -469,7 +463,7 @@ macro_rules! __attrs_expand {
         $crate::__attrs_expand!(
             $props,
             $attrs,
-            class: {$crate::__static_text!($value)}
+            class: {$crate::text!($value)}
             $(, $($rest)*)?
         );
     };
@@ -496,7 +490,7 @@ macro_rules! __attrs_expand {
         $crate::__attrs_expand!(
             $props,
             $attrs,
-            style: {$crate::__static_text!($value)}
+            style: {$crate::text!($value)}
             $(, $($rest)*)?
         );
     };
@@ -526,7 +520,7 @@ macro_rules! __attrs_expand {
         $crate::__attrs_expand!(
             $props,
             $attrs,
-            {$crate::__static_text!(@raw $name)}: {$crate::__static_text!($value)}
+            {$crate::text!(@raw $name)}: {$crate::text!($value)}
             $(, $($rest)*)?
         );
     };
@@ -535,7 +529,7 @@ macro_rules! __attrs_expand {
         $crate::__attrs_expand!(
             $props,
             $attrs,
-            {$crate::__static_text!(@raw ::core::stringify!($name))}: {$crate::__static_text!($value)}
+            {$crate::text!(@raw ::core::stringify!($name))}: {$crate::text!($value)}
             $(, $($rest)*)?
         );
     };
@@ -544,7 +538,7 @@ macro_rules! __attrs_expand {
         $crate::__attrs_expand!(
             $props,
             $attrs,
-            {$crate::__static_text!(@raw $name)}: {$value}
+            {$crate::text!(@raw $name)}: {$value}
             $(, $($rest)*)?
         );
     };
@@ -553,7 +547,7 @@ macro_rules! __attrs_expand {
         $crate::__attrs_expand!(
             $props,
             $attrs,
-            {$crate::__static_text!(@raw ::core::stringify!($name))}: {$value}
+            {$crate::text!(@raw ::core::stringify!($name))}: {$value}
             $(, $($rest)*)?
         );
     };

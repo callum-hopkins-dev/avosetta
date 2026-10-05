@@ -708,12 +708,12 @@ macro_rules! concat {
     };
 
     ($literal:literal $(,)?) => {
-        $crate::__static_text!(::core::concat!($literal))
+        $crate::text!(::core::concat!($literal))
     };
 
     ($literal:literal, $($rest:tt)+) => {
         $crate::Chain(
-            $crate::__static_text!(::core::concat!($literal)),
+            $crate::text!(::core::concat!($literal)),
             $crate::concat!($($rest)+),
         )
     };
@@ -727,9 +727,38 @@ macro_rules! concat {
     };
 }
 
+/// Creates fixed-size, escaped HTML text at compile time.
+///
+/// The argument must be a string expression that can be evaluated in a `const`
+/// context. HTML-sensitive characters are escaped during compilation, and the
+/// resulting bytes are stored directly in a [`Text<N>`](Text) value without a
+/// runtime allocation.
+///
+/// Because the result is static [`Html`], it can be combined with neighboring
+/// static segments by [`concat!`] and [`asx!`](crate::asx) rather than becoming
+/// a dynamic write.
+///
+/// # Escaping
+///
+/// Ampersands, angle brackets, quotation marks, and apostrophes are replaced
+/// with their corresponding HTML entity references. Use [`Raw`] for trusted
+/// content that must be rendered without escaping.
+///
+/// # Example
+///
+/// ```
+/// use avosetta::{Html, text};
+///
+/// const MESSAGE: &str = "<status kind=\x27ready\x27>&";
+/// let message = text!(MESSAGE);
+///
+/// assert_eq!(
+///     message.to_string(),
+///     "&lt;status kind=&#39;ready&#39;&gt;&amp;"
+/// );
+/// ```
 #[macro_export]
-#[doc(hidden)]
-macro_rules! __static_text {
+macro_rules! text {
     (@raw $expr:expr) => {{
         const __STR: &str = $expr;
         const __TEXT: $crate::Text<{ __STR.len() }> =

@@ -23,18 +23,18 @@ where
     #[inline(always)]
     fn segments<T: Segments>(self, x: T) -> Self::Segments<T> {
         Chain(
-            crate::__static_text!(@raw "<"),
+            crate::text!(@raw "<"),
             Chain(
                 self.name.clone(),
                 Chain(
                     self.attrs,
                     Chain(
-                        crate::__static_text!(@raw ">"),
+                        crate::text!(@raw ">"),
                         Chain(
                             self.children,
                             Chain(
-                                crate::__static_text!(@raw "</"),
-                                Chain(self.name, crate::__static_text!(@raw ">")),
+                                crate::text!(@raw "</"),
+                                Chain(self.name, crate::text!(@raw ">")),
                             ),
                         ),
                     ),
@@ -62,11 +62,8 @@ where
     #[inline(always)]
     fn segments<T: Segments>(self, x: T) -> Self::Segments<T> {
         Chain(
-            crate::__static_text!(@raw "<"),
-            Chain(
-                self.name,
-                Chain(self.attrs, crate::__static_text!(@raw ">")),
-            ),
+            crate::text!(@raw "<"),
+            Chain(self.name, Chain(self.attrs, crate::text!(@raw ">"))),
         )
         .segments(x)
     }
@@ -85,7 +82,7 @@ macro_rules! __element {
             children: $crate::Children<impl $crate::Html>,
         ) -> impl $crate::Html {
             $crate::elements::Element {
-                name: $crate::__static_text!(@raw ::core::stringify!($ident)),
+                name: $crate::text!(@raw ::core::stringify!($ident)),
                 attrs: attrs.0,
                 children: children.0,
             }
@@ -105,7 +102,7 @@ macro_rules! __void {
             attrs: $crate::Attrs<impl $crate::Attributes>,
         ) -> impl $crate::Html {
             $crate::elements::Void {
-                name: $crate::__static_text!(@raw ::core::stringify!($ident)),
+                name: $crate::text!(@raw ::core::stringify!($ident)),
                 attrs: attrs.0,
             }
         }

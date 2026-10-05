@@ -535,7 +535,7 @@ macro_rules! __asx_expand {
 
     (@{$literal:literal} $($rest:tt)*) => {
         $crate::Chain(
-            $crate::__static_text!(::core::concat!($literal)),
+            $crate::text!(::core::concat!($literal)),
             $crate::__asx_expand!($($rest)*),
         )
     };
@@ -583,7 +583,7 @@ macro_rules! __asx_expand {
     ) => {
         $crate::Chain(
             $crate::elements::Element {
-                name: $crate::__static_text!(@raw $element),
+                name: $crate::text!(@raw $element),
 
                 attrs: $crate::__attrs!((), { $($attrs)* }).1,
                 children: $crate::__asx_expand! { $($body)* }
@@ -597,7 +597,7 @@ macro_rules! __asx_expand {
     ) => {
         $crate::Chain(
             $crate::elements::Element {
-                name: $crate::__static_text!(@raw $element),
+                name: $crate::text!(@raw $element),
 
                 attrs: (),
                 children: $crate::__asx_expand! { $($body)* }
@@ -611,7 +611,7 @@ macro_rules! __asx_expand {
     ) => {
         $crate::Chain(
             $crate::elements::Void {
-                name: $crate::__static_text!(@raw $element),
+                name: $crate::text!(@raw $element),
                 attrs: $crate::__attrs!((), { $($attrs)* }).1,
             },
             $crate::__asx_expand!($($rest)*),
@@ -623,7 +623,7 @@ macro_rules! __asx_expand {
     ) => {
         $crate::Chain(
             $crate::elements::Void {
-                name: $crate::__static_text!(@raw $element),
+                name: $crate::text!(@raw $element),
                 attrs: (),
             },
             $crate::__asx_expand!($($rest)*),
@@ -632,7 +632,7 @@ macro_rules! __asx_expand {
 
     ($literal:literal $($rest:tt)*) => {
         $crate::Chain(
-            $crate::__static_text!(::core::concat!($literal)),
+            $crate::text!(::core::concat!($literal)),
             $crate::__asx_expand!($($rest)*),
         )
     };
