@@ -36,7 +36,7 @@ impl Html for Omitted {
     }
 
     #[inline(always)]
-    fn is_present(&self) -> bool {
+    fn is_attribute_present(&self) -> bool {
         false
     }
 }

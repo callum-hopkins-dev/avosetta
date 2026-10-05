@@ -162,8 +162,8 @@
 /// ## Class and style
 ///
 /// Repeated `class` values are merged into one attribute, with one space
-/// between each present value. Repeated `style` values are also merged, and
-/// every present declaration receives a trailing semicolon:
+/// between each supplied value. Repeated `style` values are also merged, and
+/// every supplied declaration receives a trailing semicolon:
 ///
 /// ```rust
 /// # #[cfg(any())]
@@ -185,8 +185,10 @@
 /// class="card large selected" style="display: block;color: red;"
 /// ```
 ///
-/// Absent class and style values contribute neither content nor separators.
-/// The final `class` and `style` attributes are written before ordinary
+/// Each class and style value uses ordinary [`Html`](crate::Html) interpolation.
+/// Separators are unconditional, so an empty interpolation can leave harmless
+/// whitespace in `class` or an empty declaration in `style`. The final `class`
+/// and `style` attributes are written before ordinary
 /// attributes, regardless of their source order.
 ///
 /// Ordinary attributes are not merged or deduplicated. Repetition is preserved

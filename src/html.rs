@@ -1,6 +1,6 @@
 use std::{fmt::Arguments, marker::PhantomData, rc::Rc, sync::Arc};
 
-use crate::attr::{DynamicSegments, EmptySegments, SegmentKind};
+use crate::attr::{EmptySegments, PresentSegments, SegmentKind};
 
 mod sealed {
     pub trait Segments {}
@@ -36,8 +36,10 @@ pub trait Segments: sealed::Segments + Sized {
     type Kind: SegmentKind;
     type PrependStatic<S: StaticText>: Segments;
     type PrependDynamic<D: DynamicWrite>: Segments;
+    type PrependPresent<D: DynamicWrite>: Segments;
     fn prepend_static<S: StaticText>(self, x: S) -> Self::PrependStatic<S>;
     fn prepend_dynamic<D: DynamicWrite>(self, x: D) -> Self::PrependDynamic<D>;
+    fn prepend_present<D: DynamicWrite>(self, x: D) -> Self::PrependPresent<D>;
     fn write(self, s: &mut String);
 }
 
@@ -54,7 +56,7 @@ pub trait Html: Sized {
 
     #[inline(always)]
     #[doc(hidden)]
-    fn is_present(&self) -> bool {
+    fn is_attribute_present(&self) -> bool {
         true
     }
 
@@ -82,7 +84,7 @@ impl Html for () {
     }
 
     #[inline(always)]
-    fn is_present(&self) -> bool {
+    fn is_attribute_present(&self) -> bool {
         false
     }
 }
@@ -98,6 +100,7 @@ impl Segments for End {
 
     type PrependStatic<S: StaticText> = Static<S, Self>;
     type PrependDynamic<D: DynamicWrite> = Dynamic<D, Self>;
+    type PrependPresent<D: DynamicWrite> = Present<D, Self>;
 
     #[inline(always)]
     fn prepend_static<S: StaticText>(self, x: S) -> Self::PrependStatic<S> {
@@ -107,6 +110,11 @@ impl Segments for End {
     #[inline(always)]
     fn prepend_dynamic<D: DynamicWrite>(self, x: D) -> Self::PrependDynamic<D> {
         Dynamic(x, self)
+    }
+
+    #[inline(always)]
+    fn prepend_present<D: DynamicWrite>(self, x: D) -> Self::PrependPresent<D> {
+        Present(x, self)
     }
 
     #[inline(always)]
@@ -133,6 +141,7 @@ where
 
     type PrependStatic<X: StaticText> = Static<Concat<X, S>, T>;
     type PrependDynamic<D: DynamicWrite> = Dynamic<D, Self>;
+    type PrependPresent<D: DynamicWrite> = Present<D, Self>;
 
     #[inline(always)]
     fn prepend_static<X: StaticText>(self, x: X) -> Self::PrependStatic<X> {
@@ -142,6 +151,11 @@ where
     #[inline(always)]
     fn prepend_dynamic<D: DynamicWrite>(self, x: D) -> Self::PrependDynamic<D> {
         Dynamic(x, self)
+    }
+
+    #[inline(always)]
+    fn prepend_present<D: DynamicWrite>(self, x: D) -> Self::PrependPresent<D> {
+        Present(x, self)
     }
 
     #[inline(always)]
@@ -167,10 +181,11 @@ where
     D: DynamicWrite,
     T: Segments,
 {
-    type Kind = DynamicSegments;
+    type Kind = <T::Kind as SegmentKind>::PrependDynamic;
 
     type PrependStatic<S: StaticText> = Static<S, Self>;
     type PrependDynamic<X: DynamicWrite> = Dynamic<X, Self>;
+    type PrependPresent<X: DynamicWrite> = Present<X, Self>;
 
     #[inline(always)]
     fn prepend_static<S: StaticText>(self, x: S) -> Self::PrependStatic<S> {
@@ -180,6 +195,55 @@ where
     #[inline(always)]
     fn prepend_dynamic<X: DynamicWrite>(self, x: X) -> Self::PrependDynamic<X> {
         Dynamic(x, self)
+    }
+
+    #[inline(always)]
+    fn prepend_present<X: DynamicWrite>(self, x: X) -> Self::PrependPresent<X> {
+        Present(x, self)
+    }
+
+    #[inline(always)]
+    fn write(self, s: &mut String) {
+        self.0.write(s);
+        self.1.write(s);
+    }
+}
+
+#[doc(hidden)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct Present<D, T>(pub D, pub T);
+
+impl<D, T> sealed::Segments for Present<D, T>
+where
+    D: DynamicWrite,
+    T: Segments,
+{
+}
+
+impl<D, T> Segments for Present<D, T>
+where
+    D: DynamicWrite,
+    T: Segments,
+{
+    type Kind = PresentSegments;
+
+    type PrependStatic<S: StaticText> = Static<S, Self>;
+    type PrependDynamic<X: DynamicWrite> = Dynamic<X, Self>;
+    type PrependPresent<X: DynamicWrite> = Present<X, Self>;
+
+    #[inline(always)]
+    fn prepend_static<S: StaticText>(self, x: S) -> Self::PrependStatic<S> {
+        Static(x, self)
+    }
+
+    #[inline(always)]
+    fn prepend_dynamic<X: DynamicWrite>(self, x: X) -> Self::PrependDynamic<X> {
+        Dynamic(x, self)
+    }
+
+    #[inline(always)]
+    fn prepend_present<X: DynamicWrite>(self, x: X) -> Self::PrependPresent<X> {
+        Present(x, self)
     }
 
     #[inline(always)]
@@ -258,8 +322,8 @@ where
     }
 
     #[inline(always)]
-    fn is_present(&self) -> bool {
-        self.0.is_present() || self.1.is_present()
+    fn is_attribute_present(&self) -> bool {
+        self.0.is_attribute_present() || self.1.is_attribute_present()
     }
 }
 
@@ -288,11 +352,11 @@ impl<F> Html for WriteHtml<F>
 where
     F: FnOnce(&mut String),
 {
-    type Segments<T: Segments> = T::PrependDynamic<Self>;
+    type Segments<T: Segments> = T::PrependPresent<Self>;
 
     #[inline(always)]
     fn segments<T: Segments>(self, x: T) -> Self::Segments<T> {
-        x.prepend_dynamic(self)
+        x.prepend_present(self)
     }
 }
 
@@ -358,11 +422,11 @@ impl<T> Html for Raw<T>
 where
     T: AsRef<str>,
 {
-    type Segments<S: Segments> = S::PrependDynamic<Self>;
+    type Segments<S: Segments> = S::PrependPresent<Self>;
 
     #[inline(always)]
     fn segments<S: Segments>(self, x: S) -> Self::Segments<S> {
-        x.prepend_dynamic(self)
+        x.prepend_present(self)
     }
 }
 
@@ -385,7 +449,7 @@ impl Html for bool {
     }
 
     #[inline(always)]
-    fn is_present(&self) -> bool {
+    fn is_attribute_present(&self) -> bool {
         *self
     }
 }
@@ -397,20 +461,20 @@ impl DynamicWrite for bool {
     }
 }
 
-macro_rules! impl_dynamic_html {
+macro_rules! impl_present_html {
     ($ty:ty) => {
         impl Html for $ty {
-            type Segments<T: Segments> = T::PrependDynamic<Self>;
+            type Segments<T: Segments> = T::PrependPresent<Self>;
 
             #[inline(always)]
             fn segments<T: Segments>(self, x: T) -> Self::Segments<T> {
-                x.prepend_dynamic(self)
+                x.prepend_present(self)
             }
         }
     };
 }
 
-impl_dynamic_html!(char);
+impl_present_html!(char);
 
 impl DynamicWrite for char {
     #[inline(always)]
@@ -422,7 +486,7 @@ impl DynamicWrite for char {
 
 macro_rules! impl_integer {
     ($ty:ty) => {
-        impl_dynamic_html!($ty);
+        impl_present_html!($ty);
 
         impl DynamicWrite for $ty {
             #[inline(always)]
@@ -448,7 +512,7 @@ impl_integer!(i128);
 
 macro_rules! impl_float {
     ($ty:ty) => {
-        impl_dynamic_html!($ty);
+        impl_present_html!($ty);
 
         impl DynamicWrite for $ty {
             #[inline(always)]
@@ -462,7 +526,7 @@ macro_rules! impl_float {
 impl_float!(f32);
 impl_float!(f64);
 
-impl_dynamic_html!(&str);
+impl_present_html!(&str);
 
 impl DynamicWrite for &str {
     #[inline(always)]
@@ -473,7 +537,7 @@ impl DynamicWrite for &str {
 
 macro_rules! impl_string {
     ($ty:ty) => {
-        impl_dynamic_html!($ty);
+        impl_present_html!($ty);
 
         impl DynamicWrite for $ty {
             #[inline(always)]
@@ -497,7 +561,7 @@ impl_string!(Arc<str>);
 impl_string!(&Arc<str>);
 impl_string!(&mut Arc<str>);
 
-impl_dynamic_html!(Arguments<'_>);
+impl_present_html!(Arguments<'_>);
 
 impl DynamicWrite for Arguments<'_> {
     #[inline(always)]
@@ -518,7 +582,7 @@ where
     }
 
     #[inline(always)]
-    fn is_present(&self) -> bool {
+    fn is_attribute_present(&self) -> bool {
         self.is_some()
     }
 }
