@@ -420,6 +420,16 @@
 /// }
 /// # }
 /// ```
+///
+/// Every control-flow form requires its complete header and delimiters.
+/// Incomplete input is rejected by the ASX parser:
+///
+/// ```compile_fail
+/// use avosetta::asx;
+///
+/// let status = Some("ready");
+/// let _ = asx! { @match status };
+/// ```
 #[macro_export]
 macro_rules! asx {
     ($($tt:tt)*) => {{
@@ -463,6 +473,10 @@ macro_rules! __asx_if {
     ([$($condition:tt)*] $token:tt $($rest:tt)*) => {
         $crate::__asx_if!([$($condition)* $token] $($rest)*)
     };
+
+    ([$($condition:tt)*]) => {
+        ::core::compile_error!("`@if` requires a condition and body")
+    };
 }
 
 #[macro_export]
@@ -481,6 +495,10 @@ macro_rules! __asx_for {
 
     ([$($header:tt)*] $token:tt $($rest:tt)*) => {
         $crate::__asx_for!([$($header)* $token] $($rest)*)
+    };
+
+    ([$($header:tt)*]) => {
+        ::core::compile_error!("`@for` requires an iterator expression and body")
     };
 }
 
@@ -501,6 +519,10 @@ macro_rules! __asx_while {
     ([$($condition:tt)*] $token:tt $($rest:tt)*) => {
         $crate::__asx_while!([$($condition)* $token] $($rest)*)
     };
+
+    ([$($condition:tt)*]) => {
+        ::core::compile_error!("`@while` requires a condition and body")
+    };
 }
 
 #[macro_export]
@@ -514,6 +536,10 @@ macro_rules! __asx_let {
 
     ([$($statement:tt)*] $token:tt $($rest:tt)*) => {
         $crate::__asx_let!([$($statement)* $token] $($rest)*)
+    };
+
+    ([$($statement:tt)*]) => {
+        ::core::compile_error!("`@let` requires a semicolon")
     };
 }
 
@@ -531,6 +557,10 @@ macro_rules! __asx_match {
 
     ([$($value:tt)*] $token:tt $($rest:tt)*) => {
         $crate::__asx_match!([$($value)* $token] $($rest)*)
+    };
+
+    ([$($value:tt)*]) => {
+        ::core::compile_error!("`@match` requires a value and arm body")
     };
 }
 
@@ -553,6 +583,10 @@ macro_rules! __asx_match_write {
                 }
             ),*
         }
+    };
+
+    ($($invalid:tt)*) => {
+        ::core::compile_error!("invalid `@match` arms; expected `pattern => { ... }`")
     };
 }
 
@@ -822,5 +856,9 @@ macro_rules! __asx_expand {
         $crate::__asx_expand! {
             @$crate::elements::$element; $($rest)*
         }
+    };
+
+    ($($invalid:tt)+) => {
+        ::core::compile_error!("invalid ASX syntax")
     };
 }
