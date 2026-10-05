@@ -598,4 +598,8 @@ macro_rules! __attrs_expand {
 
         $crate::__attrs_expand!($props, $attrs, $($($rest)*)?);
     };
+
+    ($props:ident, $attrs:ident, $($invalid:tt)+) => {
+        ::core::compile_error!("invalid ASX attribute or property syntax")
+    };
 }
