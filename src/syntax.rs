@@ -240,46 +240,22 @@
 /// use any supported combination and order of [`Props`](crate::Props),
 /// [`Attrs`](crate::Attrs), and [`Children`](crate::Children).
 ///
-/// Dot-prefixed entries configure the value inside `Props` through consuming
-/// builder methods. The props type must implement [`Default`], and each entry
-/// calls the correspondingly named method in source order. A method consumes
-/// the current value and returns the value used by the next entry:
+/// Dot-prefixed entries initialize fields on the value inside `Props`. That
+/// value starts at `Default::default()`, and assignments occur in source order:
 ///
 /// ```rust
-/// use avosetta::{Html, Props, asx};
-///
-/// #[derive(Default)]
-/// struct ButtonProps {
-///     label: &'static str,
-///     disabled: bool,
-/// }
-///
-/// impl ButtonProps {
-///     fn label(mut self, label: &'static str) -> Self {
-///         self.label = label;
-///         self
-///     }
-///
-///     fn disabled(mut self, disabled: bool) -> Self {
-///         self.disabled = disabled;
-///         self
-///     }
-/// }
-///
-/// fn button(props: Props<ButtonProps>) -> impl Html {
-///     let ButtonProps { label, disabled } = props.0;
-///     asx! { button[disabled: {disabled}] { @{label} } }
-/// }
-///
 /// # #[cfg(any())]
 /// # asx! {
-/// @button[.label: "Save", .disabled: {is_disabled}];
+/// @ui::Button[
+///     .kind: {Kind::Primary},
+///     .disabled: false,
+///     id: "save"
+/// ] { "Save" }
 /// # }
 /// ```
 ///
-/// Literal property values are passed to the builder method unchanged. Other
-/// Rust expressions use braces. Properties are never emitted as HTML
-/// attributes.
+/// A literal property value may be written directly; other expressions use
+/// braces. Properties are never emitted as HTML attributes.
 ///
 /// Omitting an `Attrs` parameter rejects HTML attributes. Omitting a `Children`
 /// parameter rejects a body. These constraints are checked at compile time

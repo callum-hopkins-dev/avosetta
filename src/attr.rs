@@ -410,8 +410,8 @@ where
 #[doc(hidden)]
 macro_rules! __attrs {
     ($props:expr, { $(.$name:ident: $value:tt),* $(,)? }) => {{
-        #[allow(unused)]
-        let props = $props;
+        #[allow(unused_mut)]
+        let mut props = $props;
 
         let attrs = $crate::Omitted;
 
@@ -421,8 +421,8 @@ macro_rules! __attrs {
     }};
 
     ($props:expr, { $($tokens:tt)* }) => {{
-        #[allow(unused)]
-        let props = $props;
+        #[allow(unused_mut)]
+        let mut props = $props;
 
         let attrs = $crate::AttributeSet {
             class: (),
@@ -442,12 +442,12 @@ macro_rules! __attrs_expand {
     ($props:ident, $attrs:ident,) => {};
 
     ($props:ident, $attrs:ident, .$name:ident: $value:literal $(, $($rest:tt)*)?) => {
-        let $props = $props.$name($value);
+        $props.$name = $value;
         $crate::__attrs_expand!($props, $attrs, $($($rest)*)?);
     };
 
     ($props:ident, $attrs:ident, .$name:ident: {$value:expr} $(, $($rest:tt)*)?) => {
-        let $props = $props.$name($value);
+        $props.$name = $value;
         $crate::__attrs_expand!($props, $attrs, $($($rest)*)?);
     };
 
