@@ -43,7 +43,9 @@ impl Html for Omitted {
 
 impl Attributes for Omitted {
     type Class = ();
+
     type Style = ();
+
     type Other = ();
 
     #[inline(always)]

@@ -65,7 +65,7 @@ fn built_in_and_literal_elements_render_in_order() {
                 br;
             }
             input[type: "text"];
-            "my-widget"[{"data-id"}: {7}] { "body" }
+            "my-widget"["data-id": 7_u8] { "body" }
             "my-void";
         },
     );
@@ -82,30 +82,32 @@ fn built_in_elements_ignore_local_bindings() {
 #[test]
 fn attributes_support_static_dynamic_and_quoted_forms() {
     let dynamic_title = String::from("<&\"");
-    let attribute_name = String::from("data-dynamic");
-
     assert_html(
         ::core::concat!(
             "<div class=\"one two&lt;&amp;\" ",
             "style=\"color: red;display: block;\" ",
             "id=\"root\" data-static=\"&lt;&amp;&quot;&#39;\" ",
-            "title=\"&lt;&amp;&quot;\" data-dynamic=\"value\" ",
+            "title=\"&lt;&amp;&quot;\" data-dynamic=\"value\" data-int=\"7\" data-float=\"1.5\" data-char=\"&lt;\" data-raw=\"&lt;&amp;\" ",
             "hidden=\"hidden\"></div>"
         ),
         asx! {
             div[
                 id: "root",
                 class: "one",
-                class: {"two<&"},
+                class: "two<&",
                 style: "color: red",
-                {"style"}: {"display: block"},
-                {"data-static"}: "<&\"\x27",
-                title: {dynamic_title},
-                {attribute_name}: {"value"},
-                hidden: {true},
-                disabled: {false},
-                empty: {()},
-                omitted: {None::<&str>}
+                "style": "display: block",
+                "data-static": "<&\"\x27",
+                title: dynamic_title,
+                "data-dynamic": "value",
+                "data-int": 7_i32,
+                "data-float": 1.5_f64,
+                "data-char": '<',
+                "data-raw": r#"<&"#,
+                hidden: true,
+                disabled: false,
+                empty: (),
+                omitted: None::<&str>
             ] {}
         },
     );
@@ -113,11 +115,9 @@ fn attributes_support_static_dynamic_and_quoted_forms() {
 
 #[test]
 fn valueless_attributes_are_static_true_attributes() {
-    let dynamic_name = String::from("data-dynamic");
-
     assert_html(
         "<input required=\"required\" data-static=\"data-static\" data-dynamic=\"data-dynamic\">",
-        asx! { input[required, {"data-static"}, {dynamic_name}]; },
+        asx! { input[required, "data-static", "data-dynamic"]; },
     );
 }
 
@@ -145,10 +145,10 @@ fn projected_attributes_apply_contextual_presence_rules() {
         "<div class=\"local projected\" style=\";\" title=\"&lt;&amp;\"></div>",
         asx! {
             @components::project[
-                class: {Some("projected")},
-                style: {None::<&str>},
-                title: {Some("<&")},
-                hidden: {false}
+                class: Some("projected"),
+                style: None::<&str>,
+                title: Some("<&"),
+                hidden: false
             ];
         },
     );
@@ -160,14 +160,14 @@ fn class_and_style_use_normal_interpolation() {
 
     assert_html(
         "<div class=\"false\" style=\"false;\"></div>",
-        asx! { div[class: {flag}, style: {flag}] {} },
+        asx! { div[class: flag, style: flag] {} },
     );
     assert_html(
         "<div class=\"\" style=\";\"></div>",
         asx! {
             div[
-                class: {None::<&str>},
-                style: {None::<&str>}
+                class: None::<&str>,
+                style: None::<&str>
             ] {}
         },
     );
@@ -298,12 +298,12 @@ fn concat_combines_literals_and_html_values() {
     );
     assert_html(
         "<div style=\"width: 320px;\"></div>",
-        asx! { div[style: {crate::concat!("width: ", width, "px")}] {} },
+        asx! { div[style: crate::concat!("width: ", width, "px")] {} },
     );
     assert_html(
         "<div data-size=\"width: 320px\"></div>",
         asx! {
-            div[{"data-size"}: {crate::concat!("width: ", width, "px")}] {}
+            div["data-size": crate::concat!("width: ", width, "px")] {}
         },
     );
 }
@@ -458,7 +458,7 @@ fn components_support_every_argument_combination_and_order() {
     assert_html("<component></component>", asx! { @components::zero; });
     assert_html(
         "<component>P</component>",
-        asx! { @components::p[.label: {String::from("P")}]; },
+        asx! { @components::p[.label: String::from("P")]; },
     );
     assert_html(
         "<component id=\"a\"></component>",
@@ -468,19 +468,19 @@ fn components_support_every_argument_combination_and_order() {
 
     assert_html(
         "<component id=\"a\">P</component>",
-        asx! { @components::pa[.label: {String::from("P")}, id: "a"]; },
+        asx! { @components::pa[.label: String::from("P"), id: "a"]; },
     );
     assert_html(
         "<component id=\"a\">P</component>",
-        asx! { @components::ap[.label: {String::from("P")}, id: "a"]; },
+        asx! { @components::ap[.label: String::from("P"), id: "a"]; },
     );
     assert_html(
         "<component>PC</component>",
-        asx! { @components::pc[.label: {String::from("P")}] { "C" } },
+        asx! { @components::pc[.label: String::from("P")] { "C" } },
     );
     assert_html(
         "<component>PC</component>",
-        asx! { @components::cp[.label: {String::from("P")}] { "C" } },
+        asx! { @components::cp[.label: String::from("P")] { "C" } },
     );
     assert_html(
         "<component id=\"a\">C</component>",
@@ -493,27 +493,27 @@ fn components_support_every_argument_combination_and_order() {
 
     assert_html(
         "<component id=\"a\">PC</component>",
-        asx! { @components::pac[.label: {String::from("P")}, id: "a"] { "C" } },
+        asx! { @components::pac[.label: String::from("P"), id: "a"] { "C" } },
     );
     assert_html(
         "<component id=\"a\">PC</component>",
-        asx! { @components::pca[.label: {String::from("P")}, id: "a"] { "C" } },
+        asx! { @components::pca[.label: String::from("P"), id: "a"] { "C" } },
     );
     assert_html(
         "<component id=\"a\">PC</component>",
-        asx! { @components::apc[.label: {String::from("P")}, id: "a"] { "C" } },
+        asx! { @components::apc[.label: String::from("P"), id: "a"] { "C" } },
     );
     assert_html(
         "<component id=\"a\">PC</component>",
-        asx! { @components::acp[.label: {String::from("P")}, id: "a"] { "C" } },
+        asx! { @components::acp[.label: String::from("P"), id: "a"] { "C" } },
     );
     assert_html(
         "<component id=\"a\">PC</component>",
-        asx! { @components::cpa[.label: {String::from("P")}, id: "a"] { "C" } },
+        asx! { @components::cpa[.label: String::from("P"), id: "a"] { "C" } },
     );
     assert_html(
         "<component id=\"a\">PC</component>",
-        asx! { @components::cap[.label: {String::from("P")}, id: "a"] { "C" } },
+        asx! { @components::cap[.label: String::from("P"), id: "a"] { "C" } },
     );
 
     assert_html(

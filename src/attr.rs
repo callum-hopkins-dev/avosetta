@@ -265,7 +265,9 @@ pub trait Attributes: Html {
 
 impl Attributes for () {
     type Class = ();
+
     type Style = ();
+
     type Other = ();
 
     #[inline(always)]
@@ -291,7 +293,9 @@ where
     Style<S>: Html,
 {
     type Class = C;
+
     type Style = S;
+
     type Other = O;
 
     #[inline(always)]
