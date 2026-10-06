@@ -568,6 +568,200 @@ macro_rules! __asx_match_write {
 
 #[macro_export]
 #[doc(hidden)]
+macro_rules! __asx_attrs {
+    ($props:expr, { $(.$name:ident: $value:tt),* $(,)? }) => {{
+        #[allow(unused_mut)]
+        let mut props = $props;
+
+        let attrs = $crate::Omitted;
+
+        $crate::__asx_attrs!(props, attrs, $(.$name: $value),*);
+
+        (props, attrs)
+    }};
+
+    ($props:expr, { $($tokens:tt)* }) => {{
+        #[allow(unused_mut)]
+        let mut props = $props;
+
+        let attrs = $crate::AttributeSet {
+            class: (),
+            style: (),
+            other: (),
+        };
+
+        $crate::__asx_attrs!(props, attrs, $($tokens)*);
+
+        (props, attrs)
+    }};
+
+    ($props:ident, $attrs:ident,) => {};
+
+    ($props:ident, $attrs:ident, .$name:ident: $value:literal $(, $($rest:tt)*)?) => {
+        $props.$name = $value;
+        $crate::__asx_attrs!($props, $attrs, $($($rest)*)?);
+    };
+
+    ($props:ident, $attrs:ident, .$name:ident: {$value:expr} $(, $($rest:tt)*)?) => {
+        $props.$name = $value;
+        $crate::__asx_attrs!($props, $attrs, $($($rest)*)?);
+    };
+
+    ($props:ident, $attrs:ident, ..$value:expr) => {
+        let (class, style, other) = $crate::Attributes::into_parts($value);
+
+        let $attrs = $crate::AttributeSet {
+            class: $crate::ClassChain($attrs.class, class),
+            style: $crate::Chain($attrs.style, style),
+            other: $crate::Chain($attrs.other, other),
+        };
+    };
+
+    ($props:ident, $attrs:ident, $name:ident $(, $($rest:tt)*)?) => {
+        $crate::__asx_attrs!(
+            $props,
+            $attrs,
+            {$crate::text!(@raw ::core::stringify!($name))}:
+                {$crate::text!(@raw ::core::stringify!($name))}
+            $(, $($rest)*)?
+        );
+    };
+
+    ($props:ident, $attrs:ident, {$name:literal} $(, $($rest:tt)*)?) => {
+        $crate::__asx_attrs!(
+            $props,
+            $attrs,
+            {$crate::text!(@raw $name)}: {$crate::text!(@raw $name)}
+            $(, $($rest)*)?
+        );
+    };
+
+    ($props:ident, $attrs:ident, {$name:expr} $(, $($rest:tt)*)?) => {
+        let $attrs = $crate::AttributeSet {
+            class: $attrs.class,
+            style: $attrs.style,
+            other: $crate::Chain(
+                $attrs.other,
+                $crate::Attr($name, true),
+            ),
+        };
+
+        $crate::__asx_attrs!($props, $attrs, $($($rest)*)?);
+    };
+
+    ($props:ident, $attrs:ident, class: $value:literal $(, $($rest:tt)*)?) => {
+        $crate::__asx_attrs!(
+            $props,
+            $attrs,
+            class: {$crate::text!($value)}
+            $(, $($rest)*)?
+        );
+    };
+
+    ($props:ident, $attrs:ident, {"class"}: $value:literal $(, $($rest:tt)*)?) => {
+        $crate::__asx_attrs!($props, $attrs, class: $value $(, $($rest)*)?);
+    };
+
+    ($props:ident, $attrs:ident, class: {$value:expr} $(, $($rest:tt)*)?) => {
+        let $attrs = $crate::AttributeSet {
+            class: $crate::ClassChain($attrs.class, $value),
+            style: $attrs.style,
+            other: $attrs.other,
+        };
+
+        $crate::__asx_attrs!($props, $attrs, $($($rest)*)?);
+    };
+
+    ($props:ident, $attrs:ident, {"class"}: {$value:expr} $(, $($rest:tt)*)?) => {
+        $crate::__asx_attrs!($props, $attrs, class: {$value} $(, $($rest)*)?);
+    };
+
+    ($props:ident, $attrs:ident, style: $value:literal $(, $($rest:tt)*)?) => {
+        $crate::__asx_attrs!(
+            $props,
+            $attrs,
+            style: {$crate::text!($value)}
+            $(, $($rest)*)?
+        );
+    };
+
+    ($props:ident, $attrs:ident, {"style"}: $value:literal $(, $($rest:tt)*)?) => {
+        $crate::__asx_attrs!($props, $attrs, style: $value $(, $($rest)*)?);
+    };
+
+    ($props:ident, $attrs:ident, style: {$value:expr} $(, $($rest:tt)*)?) => {
+        let $attrs = $crate::AttributeSet {
+            class: $attrs.class,
+            style: $crate::Chain(
+                $attrs.style,
+                $crate::StyleValue($value),
+            ),
+            other: $attrs.other,
+        };
+
+        $crate::__asx_attrs!($props, $attrs, $($($rest)*)?);
+    };
+
+    ($props:ident, $attrs:ident, {"style"}: {$value:expr} $(, $($rest:tt)*)?) => {
+        $crate::__asx_attrs!($props, $attrs, style: {$value} $(, $($rest)*)?);
+    };
+
+    ($props:ident, $attrs:ident, {$name:literal}: $value:literal $(, $($rest:tt)*)?) => {
+        $crate::__asx_attrs!(
+            $props,
+            $attrs,
+            {$crate::text!(@raw $name)}: {$crate::text!($value)}
+            $(, $($rest)*)?
+        );
+    };
+
+    ($props:ident, $attrs:ident, $name:ident: $value:literal $(, $($rest:tt)*)?) => {
+        $crate::__asx_attrs!(
+            $props,
+            $attrs,
+            {$crate::text!(@raw ::core::stringify!($name))}: {$crate::text!($value)}
+            $(, $($rest)*)?
+        );
+    };
+
+    ($props:ident, $attrs:ident, {$name:literal}: {$value:expr} $(, $($rest:tt)*)?) => {
+        $crate::__asx_attrs!(
+            $props,
+            $attrs,
+            {$crate::text!(@raw $name)}: {$value}
+            $(, $($rest)*)?
+        );
+    };
+
+    ($props:ident, $attrs:ident, $name:ident: {$value:expr} $(, $($rest:tt)*)?) => {
+        $crate::__asx_attrs!(
+            $props,
+            $attrs,
+            {$crate::text!(@raw ::core::stringify!($name))}: {$value}
+            $(, $($rest)*)?
+        );
+    };
+
+    ($props:ident, $attrs:ident, {$name:expr}: {$value:expr} $(, $($rest:tt)*)?) => {
+        let $attrs = $crate::AttributeSet {
+            class: $attrs.class,
+            style: $attrs.style,
+            other: $crate::Chain(
+                $attrs.other,
+                $crate::Attr($name, $value),
+            ),
+        };
+
+        $crate::__asx_attrs!($props, $attrs, $($($rest)*)?);
+    };
+
+    ($props:ident, $attrs:ident, $($invalid:tt)+) => {
+        ::core::compile_error!("invalid ASX attribute or property syntax")
+    };
+}
+
+#[macro_export]
+#[doc(hidden)]
 macro_rules! __asx_expand {
     () => {
         ()
@@ -632,7 +826,7 @@ macro_rules! __asx_expand {
             $crate::elements::Element {
                 name: $crate::text!(@raw $element),
 
-                attrs: $crate::__attrs!((), { $($attrs)* }).1,
+                attrs: $crate::__asx_attrs!((), { $($attrs)* }).1,
                 children: $crate::__asx_expand! { $($body)* }
             },
             $crate::__asx_expand!($($rest)*),
@@ -659,7 +853,7 @@ macro_rules! __asx_expand {
         $crate::Chain(
             $crate::elements::Void {
                 name: $crate::text!(@raw $element),
-                attrs: $crate::__attrs!((), { $($attrs)* }).1,
+                attrs: $crate::__asx_attrs!((), { $($attrs)* }).1,
             },
             $crate::__asx_expand!($($rest)*),
         )
@@ -692,7 +886,7 @@ macro_rules! __asx_expand {
                     $path,
                     ::core::marker::PhantomData,
                 ));
-                let (props, attrs) = $crate::__attrs!(
+                let (props, attrs) = $crate::__asx_attrs!(
                     props,
                     { $(.$name: $value),* }
                 );
@@ -719,7 +913,7 @@ macro_rules! __asx_expand {
                     $path,
                     ::core::marker::PhantomData,
                 ));
-                let (props, attrs) = $crate::__attrs!(
+                let (props, attrs) = $crate::__asx_attrs!(
                     props,
                     { $(.$name: $value),* }
                 );
@@ -746,7 +940,7 @@ macro_rules! __asx_expand {
                     $path,
                     ::core::marker::PhantomData,
                 ));
-                let (props, attrs) = $crate::__attrs!(props, { $($attrs)* });
+                let (props, attrs) = $crate::__asx_attrs!(props, { $($attrs)* });
 
                 $crate::Fragment::html(
                     fragment,
@@ -778,7 +972,7 @@ macro_rules! __asx_expand {
                     $path,
                     ::core::marker::PhantomData,
                 ));
-                let (props, attrs) = $crate::__attrs!(props, { $($attrs)* });
+                let (props, attrs) = $crate::__asx_attrs!(props, { $($attrs)* });
 
                 $crate::Fragment::html(
                     fragment,

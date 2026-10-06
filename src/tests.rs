@@ -123,13 +123,6 @@ fn valueless_attributes_are_static_true_attributes() {
 
 #[test]
 fn attribute_projection_merges_class_style_and_other_attributes() {
-    let projected = crate::__attrs!((), {
-        id: "projected",
-        class: "base",
-        style: "color: red"
-    })
-    .1;
-
     assert_html(
         ::core::concat!(
             "<div class=\"local base\" ",
@@ -137,28 +130,27 @@ fn attribute_projection_merges_class_style_and_other_attributes() {
             "id=\"projected\"></div>"
         ),
         asx! {
-            div[
-                class: "local",
-                style: "display: block",
-                ..projected
-            ] {}
+            @components::project_with_style[
+                id: "projected",
+                class: "base",
+                style: "color: red"
+            ];
         },
     );
 }
 
 #[test]
 fn projected_attributes_apply_contextual_presence_rules() {
-    let projected = crate::__attrs!((), {
-        class: {Some("projected")},
-        style: {None::<&str>},
-        title: {Some("<&")},
-        hidden: {false}
-    })
-    .1;
-
     assert_html(
         "<div class=\"local projected\" style=\";\" title=\"&lt;&amp;\"></div>",
-        asx! { div[class: "local", ..projected] {} },
+        asx! {
+            @components::project[
+                class: {Some("projected")},
+                style: {None::<&str>},
+                title: {Some("<&")},
+                hidden: {false}
+            ];
+        },
     );
 }
 
@@ -440,6 +432,20 @@ mod components {
         props: Props<ComponentProps>,
     ) -> impl Html {
         render(props, attrs, children)
+    }
+
+    pub fn project(attrs: Attrs<impl Attributes>) -> impl Html {
+        let attrs = attrs.0;
+
+        asx! { div[class: "local", ..attrs] {} }
+    }
+
+    pub fn project_with_style(attrs: Attrs<impl Attributes>) -> impl Html {
+        let attrs = attrs.0;
+
+        asx! {
+            div[class: "local", style: "display: block", ..attrs] {}
+        }
     }
 
     pub fn property_literal(props: Props<ComponentProps>) -> impl Html {
