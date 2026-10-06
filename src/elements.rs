@@ -1,5 +1,7 @@
-use crate::html::{Chain, Segments, Text};
-use crate::{Attributes, Html};
+use crate::{
+    Attributes, Html,
+    html::{Chain, Segments, Text},
+};
 
 #[doc(hidden)]
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]

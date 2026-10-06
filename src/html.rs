@@ -34,12 +34,19 @@ pub trait DynamicWrite: Sized {
 #[doc(hidden)]
 pub trait Segments: sealed::Segments + Sized {
     type Kind: SegmentKind;
+
     type PrependStatic<S: StaticText>: Segments;
+
     type PrependDynamic<D: DynamicWrite>: Segments;
+
     type PrependPresent<D: DynamicWrite>: Segments;
+
     fn prepend_static<S: StaticText>(self, x: S) -> Self::PrependStatic<S>;
+
     fn prepend_dynamic<D: DynamicWrite>(self, x: D) -> Self::PrependDynamic<D>;
+
     fn prepend_present<D: DynamicWrite>(self, x: D) -> Self::PrependPresent<D>;
+
     fn write(self, s: &mut String);
 }
 
@@ -105,7 +112,9 @@ impl Segments for End {
     type Kind = EmptySegments;
 
     type PrependStatic<S: StaticText> = Static<RunOne<S, RunEnd>, Self>;
+
     type PrependDynamic<D: DynamicWrite> = Dynamic<D, Self>;
+
     type PrependPresent<D: DynamicWrite> = Present<D, Self>;
 
     #[inline(always)]
@@ -146,7 +155,9 @@ where
     type Kind = <T::Kind as SegmentKind>::PrependStatic;
 
     type PrependStatic<X: StaticText> = Static<S::Prepend<X>, T>;
+
     type PrependDynamic<D: DynamicWrite> = Dynamic<D, Self>;
+
     type PrependPresent<D: DynamicWrite> = Present<D, Self>;
 
     #[inline(always)]
@@ -190,7 +201,9 @@ where
     type Kind = <T::Kind as SegmentKind>::PrependDynamic;
 
     type PrependStatic<S: StaticText> = Static<RunOne<S, RunEnd>, Self>;
+
     type PrependDynamic<X: DynamicWrite> = Dynamic<X, Self>;
+
     type PrependPresent<X: DynamicWrite> = Present<X, Self>;
 
     #[inline(always)]
@@ -234,7 +247,9 @@ where
     type Kind = PresentSegments;
 
     type PrependStatic<S: StaticText> = Static<RunOne<S, RunEnd>, Self>;
+
     type PrependDynamic<X: DynamicWrite> = Dynamic<X, Self>;
+
     type PrependPresent<X: DynamicWrite> = Present<X, Self>;
 
     #[inline(always)]
@@ -288,6 +303,105 @@ impl<const N: usize> Html for Text<N> {
     #[inline(always)]
     fn segments<T: Segments>(self, x: T) -> Self::Segments<T> {
         x.prepend_static(self)
+    }
+}
+
+#[doc(hidden)]
+pub struct LiteralSpec<T>(pub T);
+
+impl LiteralSpec<&'static str> {
+    pub const fn cast(self) -> &'static str {
+        self.0
+    }
+}
+
+macro_rules! impl_literal_spec {
+    ($($ty:ty),* $(,)?) => {
+        $(
+            impl LiteralSpec<$ty> {
+                pub const fn cast(self) -> &'static str {
+                    ""
+                }
+            }
+        )*
+    };
+}
+
+impl_literal_spec!(
+    bool,
+    char,
+    u8,
+    u16,
+    u32,
+    u64,
+    u128,
+    usize,
+    i8,
+    i16,
+    i32,
+    i64,
+    i128,
+    isize,
+    f32,
+    f64,
+    &'static [u8],
+    &'static ::core::ffi::CStr,
+);
+
+impl<const N: usize> LiteralSpec<&'static [u8; N]> {
+    pub const fn cast(self) -> &'static str {
+        ""
+    }
+}
+
+#[doc(hidden)]
+pub struct Literal<T, const N: usize> {
+    value: Option<T>,
+    text: Text<N>,
+}
+
+impl<T, const N: usize> Literal<T, N> {
+    #[inline(always)]
+    pub fn new(value: T, text: Text<N>) -> Self {
+        Self {
+            value: Some(value),
+            text,
+        }
+    }
+}
+
+#[doc(hidden)]
+pub trait StaticLiteral {
+    type Output: Html;
+
+    fn specialize(self) -> Self::Output;
+}
+
+impl<const N: usize> StaticLiteral for Literal<&'static str, N> {
+    type Output = Text<N>;
+
+    #[inline(always)]
+    fn specialize(self) -> Self::Output {
+        self.text
+    }
+}
+
+#[doc(hidden)]
+pub trait DynamicLiteral {
+    type Output: Html;
+
+    fn specialize(self) -> Self::Output;
+}
+
+impl<T, const N: usize> DynamicLiteral for &mut Literal<T, N>
+where
+    T: Html,
+{
+    type Output = T;
+
+    #[inline(always)]
+    fn specialize(self) -> Self::Output {
+        self.value.take().unwrap()
     }
 }
 
@@ -595,16 +709,27 @@ macro_rules! impl_integer {
 }
 
 impl_integer!(usize);
+
 impl_integer!(isize);
+
 impl_integer!(u8);
+
 impl_integer!(i8);
+
 impl_integer!(u16);
+
 impl_integer!(i16);
+
 impl_integer!(u32);
+
 impl_integer!(i32);
+
 impl_integer!(u64);
+
 impl_integer!(i64);
+
 impl_integer!(u128);
+
 impl_integer!(i128);
 
 macro_rules! impl_float {
@@ -621,6 +746,7 @@ macro_rules! impl_float {
 }
 
 impl_float!(f32);
+
 impl_float!(f64);
 
 impl_present_html!(&str);
@@ -646,16 +772,27 @@ macro_rules! impl_string {
 }
 
 impl_string!(String);
+
 impl_string!(&String);
+
 impl_string!(&mut String);
+
 impl_string!(Box<str>);
+
 impl_string!(&Box<str>);
+
 impl_string!(&mut Box<str>);
+
 impl_string!(Rc<str>);
+
 impl_string!(&Rc<str>);
+
 impl_string!(&mut Rc<str>);
+
 impl_string!(Arc<str>);
+
 impl_string!(&Arc<str>);
+
 impl_string!(&mut Arc<str>);
 
 impl_present_html!(Arguments<'_>);
@@ -760,7 +897,7 @@ macro_rules! concat {
 /// ```
 /// use avosetta::{Html, text};
 ///
-/// const MESSAGE: &str = "<status kind=\x27ready\x27>&";
+/// const MESSAGE: &str = "<status kind='ready'>&";
 /// let message = text!(MESSAGE);
 ///
 /// assert_eq!(
@@ -772,6 +909,7 @@ macro_rules! concat {
 macro_rules! text {
     (@raw $expr:expr) => {{
         const __STR: &str = $expr;
+
         const __TEXT: $crate::Text<{ __STR.len() }> =
             // SAFETY: __STR is valid UTF-8, and the target array length is
             // exactly its byte length.
@@ -835,13 +973,16 @@ macro_rules! text {
         }
 
         const __STR: &str = $expr;
+
         const __LEN: usize = __escaped_len(__STR);
+
         const __BYTES: [u8; __LEN] = __escape::<__LEN>(__STR);
-        const __TEXT: $crate::Text<__LEN> =
+
+        const __ESCAPED: &str =
             // SAFETY: __escape copies UTF-8 bytes unchanged and substitutes
             // ASCII characters with valid UTF-8 entity references.
-            unsafe { $crate::Text::new(__BYTES) };
+            unsafe { ::core::str::from_utf8_unchecked(&__BYTES) };
 
-        __TEXT
+        $crate::text!(@raw __ESCAPED)
     }};
 }

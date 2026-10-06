@@ -29,15 +29,20 @@
 //! See [`asx!`] for the complete syntax guide.
 
 mod attr;
+
 mod fragment;
+
 mod html;
+
 mod syntax;
 
 #[doc(hidden)]
 pub mod elements;
 
 pub use attr::{Attr, Attributes};
+
 pub use fragment::{Attrs, Children, Context, Fragment, Omitted, Props};
+
 pub use html::{Chain, Html, Raw, Text};
 
 #[doc(hidden)]
@@ -47,7 +52,7 @@ pub use attr::{AttributeSet, Class, ClassChain, Style, StyleValue};
 pub use fragment::FnFragment;
 
 #[doc(hidden)]
-pub use html::{FnHtml, WriteHtml};
+pub use html::{DynamicLiteral, FnHtml, Literal, LiteralSpec, StaticLiteral, WriteHtml};
 
 #[cfg(test)]
 mod tests;
